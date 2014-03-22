@@ -157,14 +157,14 @@ for question in questions
     # Compare if the original question answerer also answered one of the similar questions
     compareAnswersResult = compare_answers original_question_id, all_questions_answers
     if compareAnswersResult['succees']
-      puts "GOOD ONE! #{compareAnswersResult['good_questions']}"
+      puts "GOOD #{compareAnswersResult['good_questions']}"
     else
       message = compareAnswersResult['message']
       
       if (message)
-        puts "BADDDD :( #{message} ; Number of questions #{similar_questions.count}"
+        puts "BAD #{message} ; Number of questions #{similar_questions.count}"
       else
-        puts "BADDDD :("
+        puts "BAD"
       end
     end
   rescue Exception => e
