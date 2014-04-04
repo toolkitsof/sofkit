@@ -6,7 +6,7 @@ require 'debugger'
 # We can do this in 2 ways:
 # 1) Use Solr's More Like This Mechanism.
 # 2) Put the question body in solr's query.
-def get_similar_questions_from_solr question, use_more_like_this = true
+def get_similar_questions_from_solr(question, use_more_like_this = true)
   puts "INFO: get_similar_questions_from_solr"
   
   # Direct connection
@@ -58,7 +58,7 @@ end
 
 # Receives a list of all answers including the answer of the "new question" (original_question_id) and the answers of suggested questions.
 # Returns true if the answerer of the original question is in the list of answerers in the suggested questions, otherwise false.
-def compare_answers original_question_id, all_questions_answers
+def compare_answers(original_question_id, all_questions_answers)
   puts 'INFO: compare_answers'
   
   begin
@@ -115,7 +115,7 @@ def compare_answers original_question_id, all_questions_answers
 end
 
 # Will get all answers from Stackoverflow, if after the first query there is still more it will get them too
-def get_all_answers_from_stackoverflow questions_ids
+def get_all_answers_from_stackoverflow(questions_ids)
   puts "INFO: get_all_answers_from_stackoverflow"
 
   questions_answers = []
