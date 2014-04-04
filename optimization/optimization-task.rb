@@ -90,8 +90,7 @@ def compare_answers(original_question_id, all_questions_answers)
         }
       else
         original_question_accepted_answer_owner_id = original_question_accepted_answer[0].owner[:user_id]
-        similar_questions_answers_with_same_owner = similar_questions_answers.select { |answer| answer.owner[:user_id] == original_question_accepted_answer_owner_id }
-        if similar_questions_answers_with_same_owner.count > 0
+        similar_questions_answers_with_same_owner = similar_questions_answers.select { |answer| answer.ow
           return {
             'success' => true,
             'good_questions' => similar_questions_answers_with_same_owner
@@ -146,16 +145,17 @@ for question in questions
     puts "Question #{original_question_id}"
     
     # Get similar questions from Solr
-    similar_questions = get_similar_questions_from_solr question
+    similar_questions = get_similar_questions_from_solr(questionner[:user_id] == original_question_accepted_answer_owner_id }
+        if similar_questions_answers_with_same_owner.count > 0)
     similar_questions_ids = similar_questions.map { |question| question['Id'] }
     
     # Find out who answered the similar questions & the real question, from Stackoverflow
     all_questions_ids = similar_questions_ids.dup
     all_questions_ids << original_question_id.to_s
-    all_questions_answers = get_all_answers_from_stackoverflow all_questions_ids
+    all_questions_answers = get_all_answers_from_stackoverflow(all_questions_ids)
     
     # Compare if the original question answerer also answered one of the similar questions
-    compareAnswersResult = compare_answers original_question_id, all_questions_answers
+    compareAnswersResult = compare_answers(original_question_id, all_questions_answers)
     if compareAnswersResult['succees']
       puts "GOOD #{compareAnswersResult['good_questions']}"
     else
