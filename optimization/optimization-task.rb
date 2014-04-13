@@ -4,7 +4,7 @@ require 'debugger'
 
 config = {
   :solr => {
-    :url => 'http://23.251.136.35:8983/solr',
+    :url => 'http://23.251.136.35:8983/solr/collection1',
     #:url => 'http://127.0.0.1:8983/solr',
     :similar_questions_count => 100
   },
@@ -39,11 +39,12 @@ module OptimizationTask
       number_of_bad_questions = 0
       
       # Iterate chosen questions
+      counter = 1
       for question in questions
         begin
           original_question_id = question.question_id
 
-          puts "Question #{original_question_id}"
+          puts "#{counter}. Question #{original_question_id}"
           
           # Get similar questions from Solr
           similar_questions = get_similar_questions_from_solr question
@@ -78,6 +79,7 @@ module OptimizationTask
         end
         
         puts
+        counter = counter + 1
       end
     end
   end
@@ -143,21 +145,22 @@ module OptimizationTask
       # TODO: Make sure this params are also used in Blacklight
       request_params = {
         :q => "Id:#{question.question_id}",
-        :defType => 'edismax',
+        #:defType => 'edismax',
         :mlt => 'true',
-        :'mlt.fl'.to_sym => 'Body, Title',
-        #:'mlt.qf'.to_sym => 'Body^2.5 Title^10',
-        :'mlt.qf' => 'Body_t^10 Title_t^10',
-        :'mlt.count'.to_sym => @config[:solr][:similar_questions_count]
+        :'mlt.fl'.to_sym => 'Body, Title, Tags',
+        :'mlt.qf'.to_sym => 'Body^2.5 Title^10 Tags^2',
+        #:'mlt.qf' => 'Body_t^10 Title_t^10',
+        :fq => '-AcceptedAnswerId:""',
+        :'rows'.to_sym => @config[:solr][:similar_questions_count]
       }
       
-      solr_response = @solr.get 'select', :params => request_params
+      solr_response = @solr.get 'mlt', :params => request_params
       
-      similar_docs_from_solr = solr_response["moreLikeThis"][question.question_id.to_s]
+      similar_docs_from_solr = solr_response["response"]["docs"]
       if similar_docs_from_solr.nil?
         similar_questions = []
       else
-        similar_questions = similar_docs_from_solr["docs"]
+        similar_questions = similar_docs_from_solr
       end
     else
       # Send a request to /select
@@ -325,6 +328,7 @@ module OptimizationTask
     
     solr_response = @solr.get 'select', :params => request_params
     
+    # TODO: Complete
     questions_answers = {}
     solr_response["response"]["docs"].each do |answer|
       question_id = answer['ParentId'].to_i
