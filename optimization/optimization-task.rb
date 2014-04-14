@@ -9,11 +9,15 @@ config = {
   :solr => {
     :url => 'http://23.251.136.35:8983/solr/collection1',
     #:url => 'http://127.0.0.1:8983/solr',
-    :similar_questions_count => 100
   },
   :stackoverflow => {
-    :paginate_query => 30,
-    :min_votes => '50'
+    :paginate_query => 30
+  },
+  :query_parameters => {
+    :min_votes => '50', # Used to get only questions where the answerer has a high reputation,
+    :similar_questions_count => 100,
+    :mlt_fl => 'Body, Title, Tags',
+    :mlt_qf => 'Body^2.5 Title^10 Tags^2'
   }
 }
 

@@ -52,7 +52,7 @@ module OptimizationTask
     
     # Returns random (with some constrains) questions from solr
     def get_questions_from_solr
-      min_votes = @config[:stackoverflow][:min_votes]
+      min_votes = @config[:query_parameters][:min_votes]
     
       # Send a request to /select
       # TODO: Make sure this params are also used in Blacklight
@@ -95,11 +95,10 @@ module OptimizationTask
           :q => "Id:#{question.question_id}",
           #:defType => 'edismax',
           :mlt => 'true',
-          :'mlt.fl'.to_sym => 'Body, Title, Tags',
-          :'mlt.qf'.to_sym => 'Body^2.5 Title^10 Tags^2',
-          #:'mlt.qf' => 'Body_t^10 Title_t^10',
+          :'mlt.fl'.to_sym => @config[:query_parameters][:mlt_fl],
+          :'mlt.qf'.to_sym => @config[:query_parameters][:mlt_qf],
           :fq => '-AcceptedAnswerId:""',
-          :'rows'.to_sym => @config[:solr][:similar_questions_count]
+          :'rows'.to_sym => @config[:query_parameters][:similar_questions_count]
         }
         
         solr_response = @solr.get 'mlt', :params => request_params
@@ -116,8 +115,7 @@ module OptimizationTask
         request_params = {
           :q => question.body,
           :defType => 'edismax',
-          :qf => 'Body^10 Title^10',
-          # :qf => 'Body_t^10 Title_t^10',
+          :qf => @config[:query_parameters][:mlt_qf],
           :rows => 30
         }
         
