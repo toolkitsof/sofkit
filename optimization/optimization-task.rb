@@ -35,8 +35,8 @@ module OptimizationTask
     # Direct connection
     @solr = RSolr.connect :url => @config[:solr][:url]
     
-    response = get_questions_from_stack_overflow
-    #response = get_questions_from_solr
+    #response = get_questions_from_stack_overflow
+    response = get_questions_from_solr
     
     if !response['success']
       puts response['message']
