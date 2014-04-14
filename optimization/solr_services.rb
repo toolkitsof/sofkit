@@ -1,6 +1,8 @@
 module OptimizationTask
+
   module SolrServices
-    # Will get all answers from solr
+    # Receives questions
+    # Returns all answers from solr
     def get_all_answers_from_solr questions
       puts "INFO: get_all_answers_from_solr"
 
@@ -48,6 +50,7 @@ module OptimizationTask
       return questions_answers
     end
     
+    # Returns random (with some constrains) questions from solr
     def get_questions_from_solr
       min_votes = @config[:stackoverflow][:min_votes]
     

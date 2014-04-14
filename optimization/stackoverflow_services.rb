@@ -1,5 +1,6 @@
 module OptimizationTask
   module StackoverflowServices
+    # Returns random (with some constrains) questions from stack overflow
     def get_questions_from_stack_overflow
       puts "Getting questions from Stackoverflow.."
       
@@ -19,7 +20,9 @@ module OptimizationTask
       end
     end
 
-    # Will get all answers from Stackoverflow, if after the first query there is still more it will get them too
+    # Receives questions
+    # Returns all answers from solr
+    # (if after the first query there is still more it will get them too, sof indicates it by the has_more key)
     def get_all_answers_from_stackoverflow questions
       puts "INFO: get_all_answers_from_stackoverflow"
       
