@@ -24,10 +24,10 @@ module OptimizationTask
         :q => "ParentId:(#{questions_ids_parsed})",
         :defType => 'edismax',
         :fq => 'AnswerCount:""',
-        :rows => 1000
+        :rows => 8000
       }
       
-      solr_response = @solr.get 'select', :params => request_params
+      solr_response = @solr.post('select', :params => request_params)
       
       # TODO: Complete
       questions_answers = {}
@@ -55,20 +55,32 @@ module OptimizationTask
       min_votes = @config[:query_parameters][:min_votes]
     
       # Send a request to /select
-      # TODO: Make sure this params are also used in Blacklight
+
       request_params = {
         :q => "*:*",
-        :fl => 'Id, AcceptedAnswerId',
+        :fl => 'Id, AcceptedAnswerId, CreationDate',
         :defType => 'edismax',
-        :fq => "+Score:#{min_votes} -AcceptedAnswerId:\"\"",
-        :rows => 50
+        :sort => "random" + [*100..999].sample.to_s + " desc",
+        :fq => " -AcceptedAnswerId:\"\"",
+        :rows => 500
       }
-      
+
+=begin
+      request_params = {
+          :q => "Id:8338747",
+          :fl => 'Id, AcceptedAnswerId, CreationDate',
+          :defType => 'edismax',
+          :sort => "random" + [*100..999].sample.to_s + " desc",
+          :fq => " -AcceptedAnswerId:\"\"",
+          :rows => 50
+      }
+=end
       solr_response = @solr.get 'select', :params => request_params
     
       # Format response as a RubyStackoverflow Question object
       questions = solr_response['response']['docs'].map { |doc| RubyStackoverflow::Client::Question.new({
           :'question_id' => doc['Id'].to_i,
+          :'created_date' => doc['CreationDate'].to_s,
           :'accepted_answer_id' => doc['AcceptedAnswerId'].to_i
         })
       }
@@ -97,12 +109,17 @@ module OptimizationTask
           :mlt => 'true',
           :'mlt.fl'.to_sym => @config[:query_parameters][:mlt_fl],
           :'mlt.qf'.to_sym => @config[:query_parameters][:mlt_qf],
-          :fq => '-AcceptedAnswerId:""',
-          :'rows'.to_sym => @config[:query_parameters][:similar_questions_count]
+          :'mlt.minwl'.to_sym => 3,
+          :'mlt.maxqt'.to_sym => 89,
+
+          :fq => ["CreationDate:[* TO #{question.created_date}]","-AcceptedAnswerId:\"\""],
+          :rows => 8000
         }
-        
+
+        print request_params
+
         solr_response = @solr.get 'mlt', :params => request_params
-        
+
         similar_docs_from_solr = solr_response["response"]["docs"]
         if similar_docs_from_solr.nil?
           similar_questions = []

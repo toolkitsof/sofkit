@@ -1,13 +1,13 @@
 require 'ruby-stackoverflow'
 require 'rsolr'
-require 'debugger'
 
 require './solr_services.rb'
 require './stackoverflow_services.rb'
 
 config = {
   :solr => {
-    :url => 'http://23.251.136.35:8983/solr/collection1',
+    :url => 'http://localhost:8983/solr/collection1',
+    #:url => 'http://23.251.136.35:8983/solr/collection1',
     #:url => 'http://127.0.0.1:8983/solr',
   },
   :stackoverflow => {
@@ -15,9 +15,9 @@ config = {
   },
   :query_parameters => {
     :min_votes => '50', # Used to get only questions where the answerer has a high reputation,
-    :similar_questions_count => 100,
-    :mlt_fl => 'Body, Title, Tags',
-    :mlt_qf => 'Body^2.5 Title^10 Tags^2'
+    :similar_questions_count => 50,
+    :mlt_fl => 'Title, Tags, Body, Title, Tags, Body',
+    :mlt_qf => 'Title^10 Tags^2 Body^1',
   }
 }
 
@@ -84,7 +84,7 @@ module OptimizationTask
           
           puts "STATUS: number_of_good_questions: #{number_of_good_questions} | number_of_bad_questions #{number_of_bad_questions}"
         rescue Exception => e
-          debugger
+          #debugger
           puts "EXCEPTION! ex.: #{e}"
         end
         
