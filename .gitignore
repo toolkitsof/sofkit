@@ -1,7 +1,8 @@
 indexer/.idea/workspace.xml
 indexer/.idea/workspace.xml
 optimization/.idea/.name
-*.xml
+indexer/*/*.xml
+optimization/*/*.xml
 *.iml
 indexer/.idea/workspace.xml
 indexer/.idea/workspace.xml
