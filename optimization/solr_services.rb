@@ -101,9 +101,8 @@ module OptimizationTask
           :'mlt.qf'.to_sym => @config[:query_parameters][:mlt_qf],
           :'mlt.minwl'.to_sym => 3,
           :'mlt.maxqt'.to_sym => 89,
-
           :fq => ["CreationDate:[* TO #{question.created_date}]","-AcceptedAnswerId:\"\""],
-          :rows => 8000
+          :rows => @config[:query_parameters][:similar_questions_count]
         }
 
         print request_params
