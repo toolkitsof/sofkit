@@ -16,7 +16,7 @@ config = {
   },
   :query_parameters => {
     :min_votes => '50', # Used to get only questions where the answerer has a high reputation,
-    :similar_questions_count => 50,
+    :similar_questions_count => 8000,
     :mlt_fl => 'Title, Tags, Body, Title, Tags, Body',
     :mlt_qf => 'Title^10 Tags^2 Body^1',
   }
