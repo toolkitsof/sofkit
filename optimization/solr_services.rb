@@ -65,16 +65,6 @@ module OptimizationTask
         :rows => 500
       }
 
-=begin
-      request_params = {
-          :q => "Id:8338747",
-          :fl => 'Id, AcceptedAnswerId, CreationDate',
-          :defType => 'edismax',
-          :sort => "random" + [*100..999].sample.to_s + " desc",
-          :fq => " -AcceptedAnswerId:\"\"",
-          :rows => 50
-      }
-=end
       solr_response = @solr.get 'select', :params => request_params
     
       # Format response as a RubyStackoverflow Question object
