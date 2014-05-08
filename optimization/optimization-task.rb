@@ -1,5 +1,6 @@
 require 'ruby-stackoverflow'
 require 'rsolr'
+require 'debugger'
 
 require './solr_services.rb'
 require './stackoverflow_services.rb'
