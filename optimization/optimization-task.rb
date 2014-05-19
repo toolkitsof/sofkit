@@ -5,23 +5,18 @@ require 'debugger'
 require './solr_services.rb'
 require './stackoverflow_services.rb'
 
-config = {
-  :stackoverflow => {
-    :paginate_query => 30
-  },
+configs = [
+{
   :query_parameters => {
-    :similar_questions_count => 8000,
     :initial_questions_count => 200
-  },
-  :mlt_parameters => {
-    :mlt_fl => 'Title, Tags, Title, Tags',
-    :mlt_qf => 'Title^10 Tags^2 Body^1'
+  }
+},
+{
+  :query_parameters => {
+    :initial_questions_count => 10
   }
 }
-
-puts
-puts "Configuration: #{config.inspect}"
-puts
+]
 
 module OptimizationTask
   include SolrServices
@@ -103,4 +98,13 @@ end
 
 include OptimizationTask
 
-start config
+config_count = 1
+for config in configs
+  puts
+  puts "Configuration #{config_count}: #{config.inspect}"
+  puts
+
+  start config
+  
+  config_count = config_count + 1
+end
