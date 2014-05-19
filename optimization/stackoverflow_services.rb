@@ -5,7 +5,7 @@ module OptimizationTask
       puts "Getting questions from Stackoverflow.."
       
       # Get random questions from Stackoverflow
-      response = RubyStackoverflow.questions({:order => 'asc', :filter => 'withBody', :sort => 'votes', :min => @config[:query_parameters][:min_votes] })
+      response = RubyStackoverflow.questions({:order => 'asc', :filter => 'withBody', :sort => 'votes', :min => 50 })
       if response.data == nil
         return {
           'success' => false,

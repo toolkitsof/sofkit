@@ -6,19 +6,16 @@ require './solr_services.rb'
 require './stackoverflow_services.rb'
 
 config = {
-  :solr => {
-    :url => 'http://localhost:8983/solr/collection1',
-    #:url => 'http://23.251.136.35:8983/solr/collection1',
-    #:url => 'http://127.0.0.1:8983/solr',
-  },
   :stackoverflow => {
     :paginate_query => 30
   },
   :query_parameters => {
-    :min_votes => '50', # Used to get only questions where the answerer has a high reputation,
     :similar_questions_count => 8000,
-    :mlt_fl => 'Title, Tags, Body, Title, Tags, Body',
-    :mlt_qf => 'Title^10 Tags^2 Body^1',
+    :initial_questions_count => 200
+  },
+  :mlt_parameters => {
+    :mlt_fl => 'Title, Tags, Title, Tags',
+    :mlt_qf => 'Title^10 Tags^2 Body^1'
   }
 }
 
@@ -34,7 +31,9 @@ module OptimizationTask
     @config = config
     
     # Direct connection
-    @solr = RSolr.connect :url => @config[:solr][:url]
+    url = "http://146.148.24.118:8983/solr/"
+    @solr_stackoverflow_indexed = RSolr.connect :url => url + 'collection1'
+    @solr_answerer_connection = RSolr.connect :url => url + 'collection2'
     
     #response = get_questions_from_stack_overflow
     response = get_questions_from_solr
@@ -54,33 +53,39 @@ module OptimizationTask
       for question in questions
         begin
           original_question_id = question.question_id
+          original_question_accepted_answer_id = question.accepted_answer_id
 
           puts "#{counter}. Question #{original_question_id}"
           
-          # Get similar questions from Solr
-          similar_questions = get_similar_questions_from_solr question
+          # Get the query created by mlt on question
+          query = get_query_by_mlt question
           
-          # Find out who answered the similar questions & the real question, from Stackoverflow
-          all_questions = similar_questions
-          all_questions << question
-          #all_questions_answers = get_all_answers_from_stackoverflow all_questions
-          all_questions_answers = get_all_answers_from_solr all_questions
+          # Send query
+          response = get_answerers_by_question_similarity query
           
-          # Compare if the original question answerer also answered one of the similar questions
-          compareAnswersResult = compare_answers original_question_id, all_questions_answers
-          if compareAnswersResult['success']
-            puts "GOOD ONE! #{compareAnswersResult['good_questions']}"
-            number_of_good_questions = number_of_good_questions + 1
+          if !response['success']
+            puts response['message']
           else
-            message = compareAnswersResult['message']
+            answerers_suggested_ids = response['answerers']
             
-            if (message)
-              puts "BAD #{message} ; Number of questions #{similar_questions.count}"
+            response = get_by_id(original_question_accepted_answer_id)
+            if !response['success']
+              puts response['message']
             else
-              puts "BAD"
+              # The original's question answer documnet
+              answer_document = response['doc']
+              question_answerer_id = answer_document['OwnerUserId']
+              
+              # Compare if the original question answerer is also one of the suggested answerers
+              if answerers_suggested_ids.include? question_answerer_id
+                puts "GOOD ONE!"
+                number_of_good_questions = number_of_good_questions + 1
+              else
+                puts "BAD ; Number of answerers suggested #{answerers_suggested_ids.count}"
+                
+                number_of_bad_questions = number_of_bad_questions + 1
+              end
             end
-            
-            number_of_bad_questions = number_of_bad_questions + 1
           end
           
           puts "STATUS: number_of_good_questions: #{number_of_good_questions} | number_of_bad_questions #{number_of_bad_questions}"
@@ -92,65 +97,6 @@ module OptimizationTask
         puts
         counter = counter + 1
       end
-    end
-  end
-  
-  # Receives a list of all answers including the answer of the "new question" (original_question_id) and the answers of suggested questions.
-  # Returns true if the answerer of the original question is in the list of answerers in the suggested questions, otherwise false.
-  def compare_answers original_question_id, all_questions_answers
-    puts 'INFO: compare_answers'
-    
-    begin
-      # Seperate answers by original question answers and similar questions answers
-      similar_questions_answers = []
-      original_question_answers = nil
-      all_questions_answers.each do |question_id, answers|
-        # Original question
-        if question_id == original_question_id
-          original_question_answers = answers
-        else
-          similar_questions_answers.concat(answers)
-        end
-      end
-      
-      if original_question_answers.nil?
-        return {
-            'success' => false,
-            'message' => "No answers at all for question #{original_question_id}"
-          }
-      else
-        original_question_accepted_answer = original_question_answers.select { |answer| answer.is_accepted }
-        # Exactly one accepted answer
-        if original_question_accepted_answer.count != 1
-          return {
-            'success' => false,
-            'message' => "No accepted answer for question #{original_question_id}"
-          }
-        else
-          original_question_accepted_answer_owner_id = original_question_accepted_answer[0].owner[:user_id]
-          similar_questions_answers_with_same_owner = similar_questions_answers.select do |answer|
-            answer.owner[:user_id] == original_question_accepted_answer_owner_id
-          end
-          if similar_questions_answers_with_same_owner.count > 0
-            return {
-              'success' => true,
-              'good_questions' => similar_questions_answers_with_same_owner
-            }
-          else
-            return {
-              'success' => false,
-              'message' => "Number of answers #{similar_questions_answers.count}"
-            }
-          end
-        end
-      end
-    rescue Exception => e
-      debugger
-      puts "EXCEPTION! ex.: #{e}"
-      
-      return {
-        'success' => false
-      }
     end
   end
 end
