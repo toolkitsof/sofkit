@@ -55,6 +55,8 @@ module OptimizationTask
           # Get the query created by mlt on question
           query = get_query_by_mlt question
           
+          puts "parsedquery: #{query}"
+          
           # Send query
           response = get_answerers_by_question_similarity query
           

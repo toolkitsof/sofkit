@@ -10,7 +10,7 @@ module OptimizationTask
         :fl => 'Id, AcceptedAnswerId, CreationDate',
         :defType => 'edismax',
         :sort => "random" + [*100..999].sample.to_s + " desc",
-        :fq => "CreationDate[2013-01-01T00:00:00.00Z TO NOW] AND NOT AcceptedAnswerId:\"\"",
+        :fq => "CreationDate:[2013-01-01T00:00:00.00Z TO NOW] AND NOT AcceptedAnswerId:\"\"",
         :rows => @config[:query_parameters][:initial_questions_count]
       }
 
@@ -66,7 +66,8 @@ module OptimizationTask
         :defType => 'edismax',
         :boost => "recip(NumAnswered,1,1,#{num_answered_boost_limit})",
         :stopwords => true,
-        :lowercaseOperators => true
+        :lowercaseOperators => true,
+        :rows => 100
       }
 
       solr_response = @solr_answerer_connection.get 'select', :params => request_params
