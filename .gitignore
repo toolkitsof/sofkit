@@ -6,3 +6,7 @@ optimization/*/*.xml
 *.iml
 indexer/.idea/workspace.xml
 indexer/.idea/workspace.xml
+
+# Remove Intellij directories
+optimiization/.idea
+indexer/.idea
