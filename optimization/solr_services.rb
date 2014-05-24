@@ -9,7 +9,8 @@ module OptimizationTask
         :q => "CreationDate:[2013-01-01T00:00:00.00Z TO NOW] AND NOT AcceptedAnswerId:\"\"",
         :fl => 'Id, AcceptedAnswerId, CreationDate',
         #:defType => 'edismax',
-        :sort => "random" + [*100..999].sample.to_s + " desc",
+        #:sort => "random" + [*100..999].sample.to_s + " desc",
+        :sort => "random" + "34631" + " desc",
         :fq => "Score:/./ AND NOT Score:0",
         :rows => @config[:query_parameters][:initial_questions_count]
       }
@@ -73,24 +74,39 @@ module OptimizationTask
     # Returns a list of answerers by query
     def get_answerers_by_question_similarity query
 
+
       request_params = {
           :q => query,
-          :fl => 'AnswererId,NumAnswered',
-          :rows => 10
+          :fl => 'NumAnswered',
+          :rows => 40
       }
 
       solr_response = @solr_answerer_connection.get 'select', :params => request_params
 
       sumAnswers = 0;
       solr_response['response']['docs'].each { |doc| sumAnswers = sumAnswers + doc['NumAnswered'] }
-      avgAnswers = sumAnswers / 10
-
-      # Answerers with NumAnswered below this value will get boost, answerers with NumAnswered above this value will get negative boost
+      avgAnswers = sumAnswers / 40
       num_answered_boost_limit = avgAnswers
+      print(num_answered_boost_limit)
+=begin
+      request_params = {
+          :q => query,
+          :stats => true,
+          :'stats.field'.to_sym => 'NumAnswered',
+          :rows => 0
+      }
+
+      solr_response = @solr_answerer_connection.get 'select', :params => request_params
+
+      avgAnswers = solr_response['stats']['stats_fields']['NumAnswered']['mean']
+      stddev = solr_response['stats']['stats_fields']['NumAnswered']['stddev']
+=end
+      # Answerers with NumAnswered below this value will get boost, answerers with NumAnswered above this value will get negative boost
+      #num_answered_boost_limit = avgAnswers + (8 * stddev)
 
       request_params = @similatiry_query
       request_params[:q] = query
-      request_params[:boost] = "recip(NumAnswered,1,1,#{num_answered_boost_limit})"
+      request_params[:boost] = "recip(NumAnswered,1,#{2 * num_answered_boost_limit},#{num_answered_boost_limit})"
 
 
 
