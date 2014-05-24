@@ -25,7 +25,30 @@ module OptimizationTask
     url = "http://localhost:8983/solr/"
     @solr_stackoverflow_indexed = RSolr.connect :url => url + 'collection1'
     @solr_answerer_connection = RSolr.connect :url => url + 'collection2'
-    
+
+    @mlt_request = {
+        #:defType => 'edismax',
+        :mlt => 'true',
+        :stopwords => true,
+        :'mlt.fl'.to_sym => 'Tags, Title',
+        :'mlt.minwl'.to_sym => 3,
+        :'mlt.maxqt'.to_sym => 1000,
+        :'mlt.mindf'.to_sym => 400,
+        :'mlt.mintf'.to_sym => 1,
+        :'mlt.boost' => true,
+        :'mlt.qf'.to_sym => 'Title^10 Tags^10',
+        :'debugQuery' => true,
+        :rows => 0 # We just want the parsedquery
+    }
+
+    @similatiry_query = {
+        :fl => 'AnswererId',
+        :defType => 'edismax',
+        :stopwords => true,
+        :lowercaseOperators => true,
+        :rows => 8000
+    }
+
     #response = get_questions_from_stack_overflow
     response = get_questions_from_solr
     

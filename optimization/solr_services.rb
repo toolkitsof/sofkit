@@ -6,11 +6,11 @@ module OptimizationTask
       # Send a request to /select
 
       request_params = {
-        :q => "*:*",
+        :q => "CreationDate:[2013-01-01T00:00:00.00Z TO NOW] AND NOT AcceptedAnswerId:\"\"",
         :fl => 'Id, AcceptedAnswerId, CreationDate',
         #:defType => 'edismax',
         :sort => "random" + [*100..999].sample.to_s + " desc",
-        :fq => "CreationDate:[2013-01-01T00:00:00.00Z TO NOW] AND NOT AcceptedAnswerId:\"\"",
+        :fq => "Score:/./ AND NOT Score:0",
         :rows => @config[:query_parameters][:initial_questions_count]
       }
 
@@ -36,8 +36,7 @@ module OptimizationTask
 
       request_params = {
           :q => "Id:#{question_id.to_s}",
-          :fl => 'Id, AcceptedAnswerId, CreationDate',
-          :rows => @config[:query_parameters][:initial_questions_count]
+          :fl => 'Id, AcceptedAnswerId, CreationDate'
       }
 
       solr_response = @solr_stackoverflow_indexed.get 'select', :params => request_params
@@ -62,20 +61,9 @@ module OptimizationTask
       puts "INFO: get_similar_questions_from_solr"
       # Send a request to /select
       # TODO: Make sure this params are also used in Blacklight
-      request_params = {
-        :q => "Id:#{question.question_id}",
-        #:defType => 'edismax',
-        :mlt => 'true',
-        :'mlt.fl'.to_sym => 'Tags, Title',
-        :'mlt.minwl'.to_sym => 3,
-        :'mlt.maxqt'.to_sym => 1000,
-        :'mlt.mindf'.to_sym => 1,
-        :'mlt.mintf'.to_sym => 1,
-        :'mlt.boost' => true,
-        :'mlt.qf'.to_sym => 'Title^10 Tags^10',
-        :'debugQuery' => true,
-        :rows => 0 # We just want the parsedquery
-      }
+      request_params = @mlt_request
+
+      request_params[:q] = "Id:#{question.question_id}"
 
       solr_response = @solr_stackoverflow_indexed.get 'mlt', :params => request_params
 
@@ -88,28 +76,23 @@ module OptimizationTask
       request_params = {
           :q => query,
           :fl => 'AnswererId,NumAnswered',
-          :defType => 'edismax',
-          :rows => 30
+          :rows => 10
       }
 
       solr_response = @solr_answerer_connection.get 'select', :params => request_params
 
       sumAnswers = 0;
       solr_response['response']['docs'].each { |doc| sumAnswers = sumAnswers + doc['NumAnswered'] }
-      avgAnswers = sumAnswers / 30
+      avgAnswers = sumAnswers / 10
 
       # Answerers with NumAnswered below this value will get boost, answerers with NumAnswered above this value will get negative boost
       num_answered_boost_limit = avgAnswers
-    
-      request_params = {
-        :q => query,
-        :fl => 'AnswererId',
-        :defType => 'edismax',
-        :boost => "recip(NumAnswered,1,1,#{num_answered_boost_limit})",
-        :stopwords => true,
-        :lowercaseOperators => true,
-        :rows => 50
-      }
+
+      request_params = @similatiry_query
+      request_params[:q] = query
+      request_params[:boost] = "recip(NumAnswered,1,1,#{num_answered_boost_limit})"
+
+
 
       solr_response = @solr_answerer_connection.get 'select', :params => request_params
     
