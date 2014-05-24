@@ -15,6 +15,7 @@ class Feed2Solr
   val solrDocuments = new ArrayList[SolrInputDocument]()
   val server= new HttpSolrServer( url )
 
+
   // Send a bulk of SOLR documents to SOLR.
   def send(posts:ArrayBuffer[SolrId])
   {

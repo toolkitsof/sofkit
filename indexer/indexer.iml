@@ -19,7 +19,8 @@
     <orderEntry type="library" name="scala-compiler" level="project" />
     <orderEntry type="library" name="dist" level="application" />
     <orderEntry type="library" name="solrj-lib" level="application" />
-    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="target" level="project" />
+    <orderEntry type="library" name="test-interface" level="project" />
   </component>
 </module>
 
