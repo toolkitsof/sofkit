@@ -27,7 +27,7 @@ module OptimizationTask
     @solr_answerer_connection = RSolr.connect :url => url + 'collection2'
     
     #response = get_questions_from_stack_overflow
-    response = get_questions_from_solr
+    response = get_question_from_solr 15093575
     
     if !response['success']
       puts response['message']
@@ -68,28 +68,23 @@ module OptimizationTask
               # The original's question answer documnet
               answer_document = response['doc']
               question_answerer_id = answer_document['OwnerUserId']
-              # Check if answerer actually exists in the database.
-              # If he isn't, there's no reason to proceed.
-              if (check_answerer_exists(question_answerer_id)['success'])
-                # Compare if the original question answerer is also one of the suggested answerers
-                if answerers_suggested_ids.include? question_answerer_id
-                  puts "GOOD ONE!"
-                  open('D:\\good.txt', 'a') { |f|
-                    f << query + " " + question.question_id.to_s
-                    f <<  "\n"
-                  }
-                  number_of_good_questions = number_of_good_questions + 1
-                else
-                  puts "BAD ; Number of answerers suggested #{answerers_suggested_ids.count}"
-                  open('D:\\bad.txt', 'a') { |f|
-                    f << query + " " + question.question_id.to_s
-                    f <<  "\n"
-                  }
-                  number_of_bad_questions = number_of_bad_questions + 1
-                end
-              end
               
-
+              # Compare if the original question answerer is also one of the suggested answerers
+              if answerers_suggested_ids.include? question_answerer_id
+                puts "GOOD ONE!"
+                open('D:\\good.txt', 'a') { |f|
+                  f << query + " " + question.question_id.to_s
+                  f <<  "\n"
+                }
+                number_of_good_questions = number_of_good_questions + 1
+              else
+                puts "BAD ; Number of answerers suggested #{answerers_suggested_ids.count}"
+                open('D:\\bad.txt', 'a') { |f|
+                  f << query + " " + question.question_id.to_s
+                  f <<  "\n"
+                }
+                number_of_bad_questions = number_of_bad_questions + 1
+              end
             end
           end
 
