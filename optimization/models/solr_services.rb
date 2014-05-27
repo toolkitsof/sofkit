@@ -60,8 +60,7 @@ module OptimizationTask
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
     def get_query_by_mlt question
       puts "INFO: get_similar_questions_from_solr"
-      # Send a request to /select
-      # TODO: Make sure this params are also used in Blacklight
+
       request_params = @mlt_request
 
       request_params[:q] = "Id:#{question.question_id}"

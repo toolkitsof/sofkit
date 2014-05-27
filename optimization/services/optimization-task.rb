@@ -1,23 +1,12 @@
-require 'ruby-stackoverflow'
-require 'rsolr'
-require 'debugger'
-
-require './solr_services.rb'
-require './stackoverflow_services.rb'
-
-configs = [
-{
-  :query_parameters => {
-    :initial_questions_count => 500
-  }
-}
-]
+require './models/solr_services.rb'
+require './models/stackoverflow_services.rb'
 
 module OptimizationTask
   include SolrServices
   include StackoverflowServices
 
   def start config
+    debugger
     @config = config
     
     # Direct connection
@@ -26,28 +15,9 @@ module OptimizationTask
     @solr_stackoverflow_indexed = RSolr.connect :url => url + 'collection1'
     @solr_answerer_connection = RSolr.connect :url => url + 'collection2'
 
-    @mlt_request = {
-        #:defType => 'edismax',
-        :mlt => 'true',
-        :stopwords => true,
-        :'mlt.fl'.to_sym => 'Tags, Title',
-        :'mlt.minwl'.to_sym => 3,
-        :'mlt.maxqt'.to_sym => 1000,
-        :'mlt.mindf'.to_sym => 300,
-        :'mlt.mintf'.to_sym => 1,
-        :'mlt.boost' => true,
-        :'mlt.qf'.to_sym => 'Title^10 Tags^20',
-        :'debugQuery' => true,
-        :rows => 0 # We just want the parsedquery
-    }
+    @mlt_request = @config['mlt_params']
 
-    @similatiry_query = {
-        :fl => 'AnswererId',
-        :defType => 'edismax',
-        :stopwords => true,
-        :lowercaseOperators => true,
-        :rows => 800
-    }
+    @similatiry_query = @config['similarity_query_params']
 
     #response = get_questions_from_stack_overflow
     response = get_questions_from_solr
@@ -127,17 +97,4 @@ module OptimizationTask
       end
     end
   end
-end
-
-include OptimizationTask
-
-config_count = 1
-for config in configs
-  puts
-  puts "Configuration #{config_count}: #{config.inspect}"
-  puts
-
-  start config
-  
-  config_count = config_count + 1
 end
