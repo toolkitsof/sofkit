@@ -2,8 +2,8 @@ require 'ruby-stackoverflow'
 require 'rsolr'
 require 'debugger'
 
-require './solr_services.rb'
-require './stackoverflow_services.rb'
+require '../models/solr_services'
+require '../models/stackoverflow_services.rb'
 
 configs = [
 {

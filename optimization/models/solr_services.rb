@@ -9,10 +9,10 @@ module OptimizationTask
         :q => "CreationDate:[2013-01-01T00:00:00.00Z TO NOW] AND NOT AcceptedAnswerId:\"\"",
         :fl => 'Id, AcceptedAnswerId, CreationDate',
         #:defType => 'edismax',
-        #:sort => "random" + [*100..999].sample.to_s + " desc",
-        :sort => "random" + "34631" + " desc",
+        :sort => "random" + [*100..999].sample.to_s + " desc",
+        #:sort => "random" + "34631" + " desc",
         :fq => "Score:/./ AND NOT Score:0",
-        :rows => @config[:query_parameters][:initial_questions_count]
+        :rows => 222
       }
 
       solr_response = @solr_stackoverflow_indexed.get 'select', :params => request_params
@@ -136,6 +136,29 @@ module OptimizationTask
         return {
             'success' => false,
             'message' => "Returned #{docs.count} items"
+        }
+      end
+    end
+
+    # Returns a document by id
+    def get_by_parent_id id
+      request_params = {
+          :q => "ParentId:#{id}",
+          :fl => '*'
+      }
+
+      solr_response = @solr_stackoverflow_indexed.get 'select', :params => request_params
+      answerers = solr_response['response']['docs'].map { |doc| doc['OwnerUserId'] }
+
+      if answerers.count >= 1
+        return {
+            'success' => true,
+            'answerers' => answerers
+        }
+      else
+        return {
+            'success' => false,
+            'message' => "Returned #{answerers.count} items"
         }
       end
     end

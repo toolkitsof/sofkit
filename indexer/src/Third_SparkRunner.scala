@@ -16,17 +16,20 @@ object Third_SparkRunner {
 
     val hsUsers = new HashSet[String]
 
+    // Read the already indexed users file so we would skip them.
+    // The file is created as a result of a wget from collection2 (the users collection).
+    // The results are loaded to a HashSet.
     println("Starting to read existing users...")
-    val users = scala.io.Source.fromFile("D:\\vvv.txt");
+    val users = scala.io.Source.fromFile("D:\\already_indexed_users.txt");
     for (user <- users.getLines()) {
       hsUsers += user
     }
+    println ("We have " + hsUsers.size + " users already indexed.")
 
-    println ("users have " + hsUsers.size + " already indexed.")
     println("Starting the solr indexing work..")
     val server:SolrServer  = new HttpSolrServer("http://localhost:8983/solr/collection1");
     val sc = new SparkContext("local", "AggregationJob")
-    val file = sc.textFile("D:\\pairs4.txt")
+    val file = sc.textFile("D:\\answerer_to_question_mapping.txt")
     val l = file.filter(x => x.split(",").size > 1).
       map(x => (x.split(",")(0), x.split(",")(1))).
       filter(x => !x._1.equals("")).

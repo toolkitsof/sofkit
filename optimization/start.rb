@@ -3,11 +3,12 @@ require 'rsolr'
 require 'debugger'
 
 require './models/settings.rb'
-require './services/optimization-task.rb'
+#require './services/optimization-task.rb'
+require './services/optimization-task-multi-answerer.rb'
 
 include OptimizationTask
 
-debugger
+#debugger
 Settings.load! "config.rb"
 
 configs = Settings.configs

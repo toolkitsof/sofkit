@@ -53,19 +53,21 @@ module OptimizationTask
             puts response['message']
           else
             answerers_suggested_ids = response['answerers']
-            
-            response = get_by_id(original_question_accepted_answer_id)
+
+            # TODO: Change the get by id to get by parent id
+            response = get_by_parent_id(original_question_id)
             if !response['success']
               puts response['message']
             else
               # The original's question answer documnet
-              answer_document = response['doc']
-              question_answerer_id = answer_document['OwnerUserId']
+              answer_documents = response['answerers']
               # Check if answerer actually exists in the database.
               # If he isn't, there's no reason to proceed.
-              if (check_answerer_exists(question_answerer_id)['success'])
+              if (check_answerer_exists(answer_documents[0])['success'])
                 # Compare if the original question answerer is also one of the suggested answerers
-                if answerers_suggested_ids.include? question_answerer_id
+                # TODO: change to "intersection" and not inclusion
+                puts (answerers_suggested_ids & answer_documents)
+                if (answerers_suggested_ids & answer_documents).size > 0
                   puts "GOOD ONE!"
                   open('D:\\good.txt', 'a') { |f|
                     f << query + " " + question.question_id.to_s
@@ -78,6 +80,7 @@ module OptimizationTask
                     f << query + " " + question.question_id.to_s
                     f <<  "\n"
                   }
+
                   number_of_bad_questions = number_of_bad_questions + 1
                 end
               end
