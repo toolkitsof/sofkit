@@ -54,7 +54,6 @@ module OptimizationTask
           else
             answerers_suggested_ids = response['answerers']
 
-            # TODO: Change the get by id to get by parent id
             response = get_by_parent_id(original_question_id)
             if !response['success']
               puts response['message']
@@ -63,10 +62,12 @@ module OptimizationTask
               answer_documents = response['answerers']
               # Check if answerer actually exists in the database.
               # If he isn't, there's no reason to proceed.
-              if (check_answerer_exists(answer_documents[0])['success'])
+              puts "\nBefore filter :" + answer_documents.to_s
+              answer_documents = filter_answerer_exists(answer_documents, original_question_id)
+              puts "\nAfter" + answer_documents.to_s
+              if (answer_documents.size > 0)
                 # Compare if the original question answerer is also one of the suggested answerers
-                # TODO: change to "intersection" and not inclusion
-                puts (answerers_suggested_ids & answer_documents)
+                puts answer_documents.size.to_s + "  - The size of the answerers"
                 if (answerers_suggested_ids & answer_documents).size > 0
                   puts "GOOD ONE!"
                   open('D:\\good.txt', 'a') { |f|

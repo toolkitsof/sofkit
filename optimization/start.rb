@@ -1,6 +1,5 @@
 require 'ruby-stackoverflow'
 require 'rsolr'
-require 'debugger'
 
 require './models/settings.rb'
 #require './services/optimization-task.rb'

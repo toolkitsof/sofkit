@@ -6,12 +6,13 @@ module OptimizationTask
       # Send a request to /select
 
       request_params = {
-        :q => "CreationDate:[2013-01-01T00:00:00.00Z TO NOW] AND NOT AcceptedAnswerId:\"\"",
+        :q => "LastActivityDate:[2013-01-01T00:00:00.00Z TO NOW] AND NOT AcceptedAnswerId:\"\"",
         :fl => 'Id, AcceptedAnswerId, CreationDate',
         #:defType => 'edismax',
         :sort => "random" + [*100..999].sample.to_s + " desc",
-        #:sort => "random" + "34631" + " desc",
-        :fq => "Score:/./ AND NOT Score:0",
+        #:sort => "random" + "3a4631" + " desc",
+        #:fq => "NOT AnswerCount:0 AND NOT AnswerCount:1 AND NOT AnswerCount:2",
+        #:fq => "AnswerCount:[2 TO *]",
         :rows => 222
       }
 
@@ -86,7 +87,6 @@ module OptimizationTask
       solr_response['response']['docs'].each { |doc| sumAnswers = sumAnswers + doc['NumAnswered'] }
       avgAnswers = sumAnswers / 40
       num_answered_boost_limit = avgAnswers
-      print(num_answered_boost_limit)
 =begin
       request_params = {
           :q => query,
@@ -143,10 +143,9 @@ module OptimizationTask
     # Returns a document by id
     def get_by_parent_id id
       request_params = {
-          :q => "ParentId:#{id}",
+          :q => "ParentId:#{id} ",
           :fl => '*'
       }
-
       solr_response = @solr_stackoverflow_indexed.get 'select', :params => request_params
       answerers = solr_response['response']['docs'].map { |doc| doc['OwnerUserId'] }
 
@@ -164,26 +163,21 @@ module OptimizationTask
     end
 
     # Returns a document by id
-    def check_answerer_exists id
+    def filter_answerer_exists owners, questionID
+      query = ""
+      owners.map{ |x| query += " OR " + x.to_s }
+      query=query.sub("OR ", "")
+      query = "AnswererId:(#{query}) AND AnsweredQuestionIds:#{questionID}"
+      puts query
       request_params = {
-          :q => "AnswererId:#{id}",
+          :q => "#{query}",
           :fl => 'AnswererId'
       }
 
       solr_response = @solr_answerer_connection.get 'select', :params => request_params
-      docs = solr_response['response']['docs']
 
-      if docs.count == 1
-        return {
-            'success' => true,
-            'doc' => docs[0]
-        }
-      else
-        return {
-            'success' => false,
-            'message' => "Returned #{docs.count} users"
-        }
-      end
+      res = solr_response['response']['docs'].map { |doc| doc['AnswererId'] }
+      return res
     end
 
   end
