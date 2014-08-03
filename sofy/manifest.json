@@ -5,7 +5,7 @@
   "version": "1.0",
   "content_scripts": [
     {
-      "matches": ["http://stackoverflow.com/questions/*"],
+      "matches": ["http://stackoverflow.com/unanswered"],
       "js": ["jquery.js", "sofy.js"]
     }
   ]
