@@ -1,4 +1,4 @@
-module OptimizationTask
+module SofyEngine
   module StackoverflowServices
     # Returns random (with some constrains) questions from stack overflow
     def get_questions_from_stack_overflow
@@ -15,6 +15,27 @@ module OptimizationTask
         return {
           'success' => true,
           'questions' => response.data
+        }
+        
+      end
+    end
+    
+    # Returns random (with some constrains) questions from stack overflow
+    def get_question_from_stack_overflow question_id
+      puts "Getting question #{question_id} from Stackoverflow.."
+      
+      # Get question from Stackoverflow
+      response = RubyStackoverflow.questions_by_ids([question_id])
+      
+      if response.data == nil
+        return {
+          'success' => false,
+          'message' => response.inspect
+        }
+      else
+        return {
+          'success' => true,
+          'question' => response.data.first
         }
         
       end

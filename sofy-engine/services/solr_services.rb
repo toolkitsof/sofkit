@@ -1,4 +1,4 @@
-module OptimizationTask
+module SofyEngine
 
   module SolrServices
     # Returns random (with some constrains) questions from solr
@@ -60,6 +60,7 @@ module OptimizationTask
 
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
     def get_query_by_mlt question
+      debugger
       puts "INFO: get_similar_questions_from_solr"
 
       request_params = @mlt_request
@@ -106,8 +107,6 @@ module OptimizationTask
       request_params = @similatiry_query
       request_params[:q] = query
       request_params[:boost] = "recip(NumAnswered,1,#{2 * num_answered_boost_limit},#{num_answered_boost_limit})"
-
-
 
       solr_response = @solr_answerer_connection.get 'select', :params => request_params
     
