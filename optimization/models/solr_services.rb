@@ -9,11 +9,11 @@ module OptimizationTask
         :q => "LastActivityDate:[2013-01-01T00:00:00.00Z TO NOW] AND NOT AcceptedAnswerId:\"\"",
         :fl => 'Id, AcceptedAnswerId, CreationDate',
         #:defType => 'edismax',
-        :sort => "random" + [*100..999].sample.to_s + " desc",
-        #:sort => "random" + "3a4631" + " desc",
+        #:sort => "random" + [*100..999].sample.to_s + " desc",
+        :sort => "random" + "3a4631" + " desc",
         #:fq => "NOT AnswerCount:0 AND NOT AnswerCount:1 AND NOT AnswerCount:2",
         #:fq => "AnswerCount:[2 TO *]",
-        :rows => 222
+        :rows => 2222
       }
 
       solr_response = @solr_stackoverflow_indexed.get 'select', :params => request_params
@@ -165,18 +165,24 @@ module OptimizationTask
     # Returns a document by id
     def filter_answerer_exists owners, questionID
       query = ""
-      owners.map{ |x| query += " OR " + x.to_s }
-      query=query.sub("OR ", "")
-      query = "AnswererId:(#{query}) AND AnsweredQuestionIds:#{questionID}"
+      owners.map{ |x| if (x.to_s.length > 0 )
+                        query += " OR " + x.to_s
+                      end
+      }
+      query=query.sub(" OR ", "")
+      query = "AnswererId:(#{query}) AND NOT AnsweredQuestionIds:#{questionID}"
       puts query
       request_params = {
           :q => "#{query}",
           :fl => 'AnswererId'
       }
 
-      solr_response = @solr_answerer_connection.get 'select', :params => request_params
+      if (query.length > 0)
+        solr_response = @solr_answerer_connection.get 'select', :params => request_params
+        res = solr_response['response']['docs'].map { |doc| doc['AnswererId'] }
+      end
 
-      res = solr_response['response']['docs'].map { |doc| doc['AnswererId'] }
+
       return res
     end
 

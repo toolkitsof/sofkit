@@ -62,10 +62,10 @@ module OptimizationTask
               answer_documents = response['answerers']
               # Check if answerer actually exists in the database.
               # If he isn't, there's no reason to proceed.
-              puts "\nBefore filter :" + answer_documents.to_s
+              puts "Before filter : #{answer_documents.to_s}"
               answer_documents = filter_answerer_exists(answer_documents, original_question_id)
-              puts "\nAfter" + answer_documents.to_s
-              if (answer_documents.size > 0)
+              puts "After filter : #{answer_documents.to_s}"
+              if (answer_documents.size > 1)
                 # Compare if the original question answerer is also one of the suggested answerers
                 puts answer_documents.size.to_s + "  - The size of the answerers"
                 if (answerers_suggested_ids & answer_documents).size > 0
