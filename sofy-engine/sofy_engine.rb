@@ -22,6 +22,8 @@ module SofyEngine
     begin
       original_question_id = question.question_id
       
+      index_question_to_solr question
+      
       # Get the query created by mlt on question
       query = get_query_by_mlt question
       

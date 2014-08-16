@@ -58,6 +58,10 @@ module SofyEngine
       }
     end
 
+    def index_question_to_solr question
+      # # # # #
+    end
+    
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
     def get_query_by_mlt question
       debugger
