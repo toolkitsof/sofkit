@@ -61,17 +61,25 @@ module SofyEngine
     end
 
     def index_question_to_solr question
-
       #2009-12-25T11:29:20+00:00 bad
       #2010-09-24T10:47:36.927Z good
-      solr = RSolr.connect :url => 'http://130.211.93.220:8983/solr/#/collection1'
-      solr.add :Id=> question.question_id, :ParentId=> "", :PostTypeId=> "2", :AcceptedAnswerId=> question.accepted_answer_id, :CreationDate=> DateTime.parse(question.creation_date).to_time.utc.iso8601, :Score=> question.score, :Body=> question.body, :OwnerUserId=> question.owner[:user_id], :LastActivityDate=> DateTime.parse(question.last_activity_date).to_time.utc.iso8601, :Title=> question.title, :Tags=> question.tags, :AnswerCount=> question.answer_count
-
+      if question.instance_variables.include? :@accepted_answer_id
+        accepted_answer_id = question.accepted_answer_id
+      else
+        accepted_answer_id = " "
+      end
+      
+      # Split question.tags by indexer rules
+      question_tags = question.tags.join('><')
+      question_tags = '<' + question_tags + '>'
+      
+      # Index to solr
+      @solr_stackoverflow_indexed.add :Id => question.question_id, :ParentId=> "", :PostTypeId=> "2", :AcceptedAnswerId => accepted_answer_id, :CreationDate=> DateTime.parse(question.creation_date).to_time.utc.iso8601, :Score=> question.score, :Body=> question.body, :OwnerUserId=> question.owner[:user_id], :LastActivityDate=> DateTime.parse(question.last_activity_date).to_time.utc.iso8601, :Title=> question.title, :Tags => question_tags, :AnswerCount=> question.answer_count
+      @solr_stackoverflow_indexed.commit
     end
     
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
     def get_query_by_mlt question
-      debugger
       puts "INFO: get_similar_questions_from_solr"
 
       request_params = @mlt_request

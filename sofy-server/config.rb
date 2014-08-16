@@ -19,5 +19,5 @@ configs:
       defType: edismax
       stopwords: true
       lowercaseOperators: true
-      rows: 50
+      rows: 8
       start: 0

@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'ruby-stackoverflow'
 require 'rsolr'
+require 'debugger'
 
 require './models/settings.rb'
 require './../sofy-engine/sofy_engine.rb'
@@ -35,4 +36,4 @@ def return_answerers_ids_from_server question_id
 end
 
 initialize_server
-return_answerers_ids_from_server 1961020
+#return_answerers_ids_from_server 1961020

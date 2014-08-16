@@ -19,6 +19,7 @@ module SofyEngine
   end
   
   def return_answerers_ids question
+    
     begin
       original_question_id = question.question_id
       

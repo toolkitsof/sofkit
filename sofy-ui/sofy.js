@@ -1,37 +1,70 @@
 Sofy = (function() {
 
   var consts = {
+    'questionAnswers': '#answers',
     'questionSummaryClassSelector': '.question-summary',
     'questionIdPrefix': 'question-summary-',
     'marginLeftForContainer': '94px'
   };
 
   function init() {
-    var $questionsSummaries = $(consts.questionSummaryClassSelector),
-        counter = 0;
+    var url = window.location.href;
     
-  
-    $questionsSummaries.each(function() {
-      // Stackoverflow blocks us if we do too many requests
-      if (counter < 2) {
-        $container = initializeContainer();
-        perQuestion(this, $container);
-      }
+    // Question page
+    if (url.indexOf('questions') !== -1) {
+      var $questionAnswers = $(consts.questionAnswers);
+      $container = initializeContainer(false);
+      //$questionAnswers.prepend($container);
       
-      counter++;
-    });
+      var questionId = extractId(url);
+      perQuestion(questionId, $questionAnswers[0], $container);
+      
+      // When container is ready append to DOM
+      $questionAnswers.prepend($container);
+    }
+    // Results page
+    else {
+      var $questionsSummaries = $(consts.questionSummaryClassSelector),
+          counter = 0;
+      
+    
+      $questionsSummaries.each(function() {
+        // Stackoverflow blocks us if we do too many requests
+        if (counter < 2) {
+          $container = initializeContainer(true);
+          var questionId = this.id.replace(consts.questionIdPrefix, '');
+          perQuestion(questionId, this, $container);
+          
+          // When container is ready append to DOM
+          $(this).append($container);
+        }
+        
+        counter++;
+      });
+    }
   }
 
   // Creates a html element (a container) to put inside the suggested answerers
-  function initializeContainer() {
+  function initializeContainer(isResultsPage) {
     // Create container, use summary class to copy CSS style
     $container = $('<div>')
                   .attr('class', 'summary')
-                  .css('margin-left', consts.marginLeftForContainer)
                   .css('margin-bottom', '15px');
                   
+    // Special CSS rules for results page
+    if (isResultsPage) {
+      $container.css('margin-left', consts.marginLeftForContainer);
+    }
+                  
     // Create header
-    $headerContainer = $('<div>').attr('class', 'subheader')
+    $headerContainer = $('<div>')
+                          .attr('class', 'subheader');
+    
+    // Special CSS rules for question page
+    if (!isResultsPage) {
+      $headerContainer.css('margin-bottom', '6px');
+    }
+                          
     $header = $('<h1>').html('Ask users to answer')
     $headerContainer.append($header);
     
@@ -41,9 +74,7 @@ Sofy = (function() {
   }
 
   // Brings the answerers and adds to HTML to the container, per a specific question
-  function perQuestion(questionSummary, $container) {
-    var questionId = questionSummary.id.replace(consts.questionIdPrefix, '');
-    
+  function perQuestion(questionId, questionSummary, $container) {
     // Call sofy engine
     //var answerersIds = [190744, 47481, 2715725, 2052523];
     callSofyEngine(questionId, function(answerersIds) {
@@ -61,10 +92,9 @@ Sofy = (function() {
           
           // Extract answerer id from html
           var profileHref = $gravatar.children('a').first().attr('href');
-          var answererId = profileHref.substring(0, profileHref.lastIndexOf('/'));
-          answererId = profileHref.substring(answererId.lastIndexOf('/') + 1);
+          var answererId = extractId(profileHref);
           
-          var index = answerersIds.indexOf(parseInt(answererId));
+          var index = answerersIds.indexOf(answererId);
           
           // Create the header and append to gravatar
           $header = $('<h2>').html((index + 1) + '.'); // For example: 1.
@@ -74,7 +104,7 @@ Sofy = (function() {
         }).always(function() {
           counter++;
           
-          if (counter == answerersGravatars.length) {
+          if (counter == answerersIds.length) {
             //var $moreButton = createMoreButton();
             //answerersGravatars[counter] = $moreButton;
             
@@ -84,13 +114,16 @@ Sofy = (function() {
               // Append to DOM
               $container.append($gravatar);
             }
-            
-            // When container is ready append to DOM
-            $(questionSummary).append($container);
           }
         });
       }
     }); 
+  }
+  
+  function extractId(url) {
+    var id = url.substring(0, url.lastIndexOf('/'));
+    id = id.substring(id.lastIndexOf('/') + 1);
+    return id;
   }
   
   // Creates the more button
@@ -111,7 +144,8 @@ Sofy = (function() {
     var url = 'http://localhost:4567/return_answerers_ids_from_server?id=' + questionId;
     $.ajax(url)
       .success(function(results) {
-        callback(results);
+        var answerersIds = JSON.parse(results);
+        callback(answerersIds);
       })
       ;
   }
