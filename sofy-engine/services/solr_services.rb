@@ -1,3 +1,5 @@
+require 'date'
+
 module SofyEngine
 
   module SolrServices
@@ -59,7 +61,12 @@ module SofyEngine
     end
 
     def index_question_to_solr question
-      # # # # #
+
+      #2009-12-25T11:29:20+00:00 bad
+      #2010-09-24T10:47:36.927Z good
+      solr = RSolr.connect :url => 'http://130.211.93.220:8983/solr/#/collection1'
+      solr.add :Id=> question.question_id, :ParentId=> "", :PostTypeId=> "2", :AcceptedAnswerId=> question.accepted_answer_id, :CreationDate=> DateTime.parse(question.creation_date).to_time.utc.iso8601, :Score=> question.score, :Body=> question.body, :OwnerUserId=> question.owner[:user_id], :LastActivityDate=> DateTime.parse(question.last_activity_date).to_time.utc.iso8601, :Title=> question.title, :Tags=> question.tags, :AnswerCount=> question.answer_count
+
     end
     
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)

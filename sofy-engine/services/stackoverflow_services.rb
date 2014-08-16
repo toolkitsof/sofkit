@@ -25,7 +25,7 @@ module SofyEngine
       puts "Getting question #{question_id} from Stackoverflow.."
       
       # Get question from Stackoverflow
-      response = RubyStackoverflow.questions_by_ids([question_id])
+      response = RubyStackoverflow.questions_by_ids([question_id],{:filter => 'withBody'})
       
       if response.data == nil
         return {
