@@ -8,8 +8,10 @@ module SofyEngine
   def initialize_engine config
     @config = config
     @mlt_request = @config['mlt_params']
+
     @similatiry_query = @config['similarity_query_params']
-    
+    @question_simiilarity_query = @config['question_similarity_params']
+
     # Connect to Solr
     #url = "http://146.148.24.118:8983/solr/"
     url = "http://130.211.93.220:8983/solr/"

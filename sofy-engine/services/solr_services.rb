@@ -90,7 +90,25 @@ module SofyEngine
 
       parsed_query = solr_response['debug']['parsedquery']
     end
-    
+
+    # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
+    def get_questionids_by_mlt answerer
+      puts "INFO: get_similar_questions_from_solr"
+
+      request_params = @mlt_request
+
+      request_params[:q] = "AnswererId:#{answerer}"
+
+      solr_response = @solr_answerer_connection.get 'mlt', :params => request_params
+
+      parsed_query = solr_response['debug']['parsedquery']
+
+      request_params = @question_simiilarity_query
+      request_params[:q] = parsed_query
+      
+      suggested_questions = @solr_stackoverflow_indexed.get 'select', :params => request_params
+    end
+
     # Returns a list of answerers by query
     def get_answerers_by_question_similarity query
 

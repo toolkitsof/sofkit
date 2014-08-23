@@ -21,3 +21,7 @@ configs:
       lowercaseOperators: true
       rows: 8
       start: 0
+    question_similarity_params:
+      fl: Id
+      rows: 8
+      start: 0
