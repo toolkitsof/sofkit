@@ -105,7 +105,7 @@ module SofyEngine
 
       request_params = @question_simiilarity_query
       request_params[:q] = parsed_query
-      
+
       suggested_questions = @solr_stackoverflow_indexed.get 'select', :params => request_params
     end
 

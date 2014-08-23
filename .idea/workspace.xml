@@ -86,21 +86,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config.rb" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="config.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sofy-server/config.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
-              <caret line="13" column="16" selection-start-line="13" selection-start-column="16" selection-end-line="13" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.39534885" vertical-offset="0" max-vertical-offset="946">
+              <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="solr_services.rb" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="solr_services.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sofy-engine/services/solr_services.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.27867097" vertical-offset="1576" max-vertical-offset="3842">
-              <caret line="108" column="25" selection-start-line="108" selection-start-column="25" selection-end-line="108" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1473" max-vertical-offset="3842">
+              <caret line="106" column="39" selection-start-line="106" selection-start-column="39" selection-end-line="106" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -129,9 +129,9 @@
         <option value="$PROJECT_DIR$/sofy-server/server.rb" />
         <option value="C:/Ruby200-x64/lib/ruby/gems/2.0.0/gems/sinatra-sinatra-0.10.1/lib/sinatra/main.rb" />
         <option value="$PROJECT_DIR$/sofy-engine/services/stackoverflow_services.rb" />
-        <option value="$PROJECT_DIR$/sofy-server/config.rb" />
         <option value="$PROJECT_DIR$/sofy-engine/sofy_engine.rb" />
         <option value="$PROJECT_DIR$/sofy-engine/services/solr_services.rb" />
+        <option value="$PROJECT_DIR$/sofy-server/config.rb" />
       </list>
     </option>
   </component>
@@ -542,18 +542,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sofy-server/config.rb">
+    <entry file="file://$PROJECT_DIR$/sofy-engine/services/solr_services.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
-          <caret line="13" column="16" selection-start-line="13" selection-start-column="16" selection-end-line="13" selection-end-column="16" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1473" max-vertical-offset="3842">
+          <caret line="106" column="39" selection-start-line="106" selection-start-column="39" selection-end-line="106" selection-end-column="39" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sofy-engine/services/solr_services.rb">
+    <entry file="file://$PROJECT_DIR$/sofy-server/config.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27867097" vertical-offset="1576" max-vertical-offset="3842">
-          <caret line="108" column="25" selection-start-line="108" selection-start-column="25" selection-end-line="108" selection-end-column="25" />
+        <state vertical-scroll-proportion="0.39534885" vertical-offset="0" max-vertical-offset="946">
+          <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
           <folding />
         </state>
       </provider>
