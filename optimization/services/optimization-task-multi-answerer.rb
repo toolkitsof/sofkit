@@ -1,14 +1,11 @@
-require './models/solr_services.rb'
-require './models/stackoverflow_services.rb'
+require './../sofy-engine/sofy_engine.rb'
 
 module OptimizationTask
-  include SolrServices
-  include StackoverflowServices
   include SofyEngine
   
   def start config
     # Initialize SofyEngine
-    initialize config
+    initialize_engine config
   
     #response = get_questions_from_stack_overflow
     response = get_questions_from_solr
@@ -34,7 +31,7 @@ module OptimizationTask
         puts "#{counter}. Question #{original_question_id}"
       
         # Call to SofyEngine
-        (answerers_suggested_ids, query) = return_answerer question
+        (answerers_suggested_ids, query) = return_answerers_ids question, true
 
         response = get_by_parent_id(original_question_id)
         
@@ -45,9 +42,9 @@ module OptimizationTask
           answer_documents = response['answerers']
           # Check if answerer actually exists in the database.
           # If he isn't, there's no reason to proceed.
-          puts "\nBefore filter :" + answer_documents.to_s
+          puts "\nBefore filter: " + answer_documents.to_s
           answer_documents = filter_answerer_exists(answer_documents, original_question_id)
-          puts "\nAfter" + answer_documents.to_s
+          puts "\nAfter " + answer_documents.to_s
           
           if (answer_documents.size > 0)
             # Compare if the original question answerer is also one of the suggested answerers

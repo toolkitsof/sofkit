@@ -15,7 +15,7 @@ module SofyEngine
         #:sort => "random" + "3a4631" + " desc",
         #:fq => "NOT AnswerCount:0 AND NOT AnswerCount:1 AND NOT AnswerCount:2",
         #:fq => "AnswerCount:[2 TO *]",
-        :rows => 222
+        :rows => 5
       }
 
       solr_response = @solr_stackoverflow_indexed.get 'select', :params => request_params
@@ -111,8 +111,7 @@ module SofyEngine
 
     # Returns a list of answerers by query
     def get_answerers_by_question_similarity query
-
-
+      
       request_params = {
           :q => query,
           :fl => 'NumAnswered',
@@ -125,6 +124,7 @@ module SofyEngine
       solr_response['response']['docs'].each { |doc| sumAnswers = sumAnswers + doc['NumAnswered'] }
       avgAnswers = sumAnswers / 40
       num_answered_boost_limit = avgAnswers
+      
 =begin
       request_params = {
           :q => query,

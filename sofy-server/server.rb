@@ -37,6 +37,7 @@ def before_filter_init
   Settings.load! "config.rb"
   configs = Settings.configs
   config = configs.first
+  
   initialize_engine config
 end
 
