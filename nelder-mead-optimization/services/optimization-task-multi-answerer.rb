@@ -4,7 +4,7 @@ module OptimizationTask
   include SofyEngine
   
   def start questions
-      
+    
     puts "Received #{questions.count} questions"
     
     number_of_good_questions = 0
@@ -13,7 +13,9 @@ module OptimizationTask
     # Iterate chosen questions
     counter = 1
     for question in questions
-    
+      # To give solr time to GC and avoid OutOfMemory exception
+      sleep(2)
+      
       original_question_id = question.question_id
       original_question_accepted_answer_id = question.accepted_answer_id
     

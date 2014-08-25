@@ -33,7 +33,7 @@ else
   def optimize_start partial_config
     update_engine_config partial_config
     number = start(@questions)
-    puts number
+    puts "Result for config #{partial_config} is: #{number}"
     
     return number
   end

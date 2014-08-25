@@ -103,7 +103,7 @@ module SofyEngine
 
       parsed_query = solr_response['debug']['parsedquery']
 
-      request_params = @question_simiilarity_query
+      request_params = @question_similarity_query
       request_params[:q] = parsed_query
 
       suggested_questions = @solr_stackoverflow_indexed.get 'select', :params => request_params
@@ -145,6 +145,7 @@ module SofyEngine
       request_params[:q] = query
       request_params[:boost] = "recip(NumAnswered,1,#{2 * num_answered_boost_limit},#{num_answered_boost_limit})"
 
+      # Get the answerers ids of similar questions
       solr_response = @solr_answerer_connection.get 'select', :params => request_params
     
       return {

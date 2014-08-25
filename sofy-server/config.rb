@@ -16,7 +16,6 @@ configs:
       rows: 0
     similarity_query_params:
       fl: AnswererId
-      fq: AcceptedAnswerId:"" AND PostTypeId:1
       defType: edismax
       stopwords: true
       lowercaseOperators: true
