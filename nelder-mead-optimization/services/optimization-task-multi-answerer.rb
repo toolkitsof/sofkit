@@ -40,6 +40,9 @@ module OptimizationTask
         
         if (answer_documents.size > 0)
           # Compare if the original question answerer is also one of the suggested answerers
+          #if answerers_suggested_ids.include? question_answerer_id
+          
+          # Accept as a good one even if the answerer is not the accepted answerer
           puts answer_documents.size.to_s + "  - The size of the answerers"
           if (answerers_suggested_ids & answer_documents).size > 0
             puts "GOOD ONE!"
