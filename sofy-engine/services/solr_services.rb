@@ -1,4 +1,6 @@
-module OptimizationTask
+require 'date'
+
+module SofyEngine
 
   module SolrServices
     # Returns random (with some constrains) questions from solr
@@ -13,7 +15,7 @@ module OptimizationTask
         :sort => "random" + "3a4631" + " desc",
         #:fq => "NOT AnswerCount:0 AND NOT AnswerCount:1 AND NOT AnswerCount:2",
         #:fq => "AnswerCount:[2 TO *]",
-        :rows => 2222
+        :rows => 5
       }
 
       solr_response = @solr_stackoverflow_indexed.get 'select', :params => request_params
@@ -58,6 +60,24 @@ module OptimizationTask
       }
     end
 
+    def index_question_to_solr question
+      #2009-12-25T11:29:20+00:00 bad
+      #2010-09-24T10:47:36.927Z good
+      if question.instance_variables.include? :@accepted_answer_id
+        accepted_answer_id = question.accepted_answer_id
+      else
+        accepted_answer_id = " "
+      end
+      
+      # Split question.tags by indexer rules
+      question_tags = question.tags.join('><')
+      question_tags = '<' + question_tags + '>'
+      
+      # Index to solr
+      @solr_stackoverflow_indexed.add :Id => question.question_id, :ParentId=> "", :PostTypeId=> "2", :AcceptedAnswerId => accepted_answer_id, :CreationDate=> DateTime.parse(question.creation_date).to_time.utc.iso8601, :Score=> question.score, :Body=> question.body, :OwnerUserId=> question.owner[:user_id], :LastActivityDate=> DateTime.parse(question.last_activity_date).to_time.utc.iso8601, :Title=> question.title, :Tags => question_tags, :AnswerCount=> question.answer_count
+      @solr_stackoverflow_indexed.commit
+    end
+    
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
     def get_query_by_mlt question
       puts "INFO: get_similar_questions_from_solr"
@@ -70,11 +90,28 @@ module OptimizationTask
 
       parsed_query = solr_response['debug']['parsedquery']
     end
-    
+
+    # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
+    def get_questionids_by_mlt answerer
+      puts "INFO: get_similar_questions_from_solr"
+
+      request_params = @mlt_request
+
+      request_params[:q] = "AnswererId:#{answerer}"
+
+      solr_response = @solr_answerer_connection.get 'mlt', :params => request_params
+
+      parsed_query = solr_response['debug']['parsedquery']
+
+      request_params = @question_similarity_query
+      request_params[:q] = parsed_query
+
+      suggested_questions = @solr_stackoverflow_indexed.get 'select', :params => request_params
+    end
+
     # Returns a list of answerers by query
     def get_answerers_by_question_similarity query
-
-
+      
       request_params = {
           :q => query,
           :fl => 'NumAnswered',
@@ -87,6 +124,7 @@ module OptimizationTask
       solr_response['response']['docs'].each { |doc| sumAnswers = sumAnswers + doc['NumAnswered'] }
       avgAnswers = sumAnswers / 40
       num_answered_boost_limit = avgAnswers
+      
 =begin
       request_params = {
           :q => query,
@@ -107,8 +145,7 @@ module OptimizationTask
       request_params[:q] = query
       request_params[:boost] = "recip(NumAnswered,1,#{2 * num_answered_boost_limit},#{num_answered_boost_limit})"
 
-
-
+      # Get the answerers ids of similar questions
       solr_response = @solr_answerer_connection.get 'select', :params => request_params
     
       return {

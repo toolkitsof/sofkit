@@ -7,7 +7,6 @@ require './services/optimization-task-multi-answerer.rb'
 
 include OptimizationTask
 
-#debugger
 Settings.load! "config.rb"
 
 configs = Settings.configs

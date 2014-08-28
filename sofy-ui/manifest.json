@@ -1,0 +1,12 @@
+{
+  "manifest_version": 2,
+  "name": "Sofy",
+  "description": "Stackoverflow.com extension - possible answerers will be added to questions with no answers.",
+  "version": "1.0",
+  "content_scripts": [
+    {
+      "matches": ["http://stackoverflow.com/unanswered", "http://stackoverflow.com/questions/*/*", "https://stackoverflow.com/unanswered", "https://stackoverflow.com/questions/*/*"],
+      "js": ["jquery.js", "sofy.js"]
+    }
+  ]
+}

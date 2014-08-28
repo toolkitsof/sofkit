@@ -1,5 +1,8 @@
 configs:
-  -
+  dynamic:
+    - mlt.mintf: 1
+    - mlt.mintf: 4
+  static:
     query_parameters:
       initial_questions_count: 50
     mlt_params:
@@ -9,16 +12,16 @@ configs:
       mlt.minwl: 3
       mlt.maxqt: 20
       mlt.mindf: 5
-      mlt.mintf: 1
+      mlt.mintf: 3
       mlt.boost: true
-      mlt.qf: Title Tags^20
+      mlt.qf: Title^10 Tags^200
       debugQuery: true
       rows: 0
     similarity_query_params:
       fl: AnswererId
-      #defType: edismax
+      defType: edismax
       stopwords: true
-      lowercaseOperators: false
+      lowercaseOperators: true
       rows: 50
       start: 0
     question_similarity_params:
