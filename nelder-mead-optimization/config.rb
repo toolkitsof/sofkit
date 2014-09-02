@@ -1,10 +1,33 @@
 configs:
-  dynamic:
-    - mlt.mintf: 1
-    - mlt.mintf: 4
+  dynamic:  
+    -
+      - 1 #mintf
+      - 2 #mindf
+      - 3 #minwl
+      - 20 #maxqt
+    -
+      - 4
+      - 3
+      - 6
+      - 30      
+    -
+      - 2
+      - 4
+      - 2
+      - 10
+    -
+      - 3
+      - 2
+      - 6
+      - 10
+    -
+      - 2
+      - 6
+      - 2
+      - 20
   static:
     query_parameters:
-      initial_questions_count: 50
+      initial_questions_count: 500
     mlt_params:
       mlt: true
       stopwords: true

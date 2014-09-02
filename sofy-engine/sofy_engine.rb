@@ -13,9 +13,9 @@ module SofyEngine
     @question_similarity_query = @config['question_similarity_params']
 
     # Connect to Solr
-    #url = "http://146.148.24.118:8983/solr/"
-    url = "http://130.211.93.220:8983/solr/"
-    @solr_stackoverflow_indexed = RSolr.connect :url => url + 'collection1'
+    #url = "http://130.211.93.220:8983/solr/"
+    url = "http://localhost:8983/solr/"
+	@solr_stackoverflow_indexed = RSolr.connect :url => url + 'collection1'
     @solr_answerer_connection = RSolr.connect :url => url + 'collection2'
     
   end
@@ -48,8 +48,8 @@ module SofyEngine
         return response['answerers'], query
       end
     rescue Exception => e
-      debugger
       puts "EXCEPTION! ex.: #{e}"
+      return e
     end
   end
 end

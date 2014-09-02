@@ -15,7 +15,7 @@ module SofyEngine
         :sort => "random" + "3a4631" + " desc",
         #:fq => "NOT AnswerCount:0 AND NOT AnswerCount:1 AND NOT AnswerCount:2",
         #:fq => "AnswerCount:[2 TO *]",
-        :rows => 5
+        :rows => @config['query_parameters']['initial_questions_count']
       }
 
       solr_response = @solr_stackoverflow_indexed.get 'select', :params => request_params
@@ -81,13 +81,13 @@ module SofyEngine
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
     def get_query_by_mlt question
       puts "INFO: get_similar_questions_from_solr"
-
+      
       request_params = @mlt_request
 
       request_params[:q] = "Id:#{question.question_id}"
 
       solr_response = @solr_stackoverflow_indexed.get 'mlt', :params => request_params
-
+      
       parsed_query = solr_response['debug']['parsedquery']
     end
 
