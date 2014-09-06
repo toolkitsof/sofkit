@@ -86,6 +86,11 @@ module SofyEngine
 
       request_params[:q] = "Id:#{question.question_id}"
 
+      title_boost = @mlt_request['titleBoost']
+      tags_boost = @mlt_request['tagsBoost']
+      body_boost = @mlt_request['bodyBoost']
+      request_params['mlt.qf'.to_sym] = "Title^#{title_boost} Tags^#{tags_boost} Body^#{body_boost}"
+      
       solr_response = @solr_stackoverflow_indexed.get 'mlt', :params => request_params
       
       parsed_query = solr_response['debug']['parsedquery']

@@ -8,7 +8,6 @@ nelder-mead-optimization/*.txt
 optimization/.idea
 indexer/.idea
 .idea/workspace.xml
-.idea/workspace.xml
 *.iml
 indexer/.idea/workspace.xml
 indexer/.idea/workspace.xml

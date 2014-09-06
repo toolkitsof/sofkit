@@ -52,7 +52,10 @@ else
       'mlt.mintf' => args[0].to_i,
       'mlt.mindf' => args[1].to_i,
       'mlt.minwl' => args[2].to_i,
-      'mlt.maxqt' => args[3].to_i
+      'mlt.maxqt' => args[3].to_i,
+      'titleBoost' => args[4],
+      'tagsBoost' => args[5],
+      'bodyBoost' => args[6]
     }
   
     update_engine_config parsed_partial_config
