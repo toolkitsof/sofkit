@@ -7,8 +7,8 @@ object Second_Answer_to_User_Mapping {
     val chunkSize = 128 * 1024
     // Iterate over all posts which are accepted answers only and
     // map their parents (the questions) to the user who answered them.
-    val iterator = Source.fromFile("D:\\accepted_answers_only.txt")("UTF-8").getLines.grouped(chunkSize)
-    var out_stream = new java.io.PrintStream("D:\\answerer_to_question_mapping.txt", "UTF-8")
+    val iterator = Source.fromFile("E:\\stackoverflow\\accepted_answers_content.txt")("UTF-8").getLines.grouped(chunkSize)
+    var out_stream = new java.io.PrintStream("E:\\stackoverflow\\answerer_to_question_mapping.txt", "UTF-8")
     System.setOut(out_stream)
     iterator.foreach { lines => {
       lines.par.foreach { line =>
@@ -17,8 +17,9 @@ object Second_Answer_to_User_Mapping {
         {
           val row = XML.loadString(line)
           // We discard 2013 data so we could preform tests on it.
-          if ((row \ "@CreationDate").toString().length > 0 &&
-            !(row \ "@CreationDate").toString().substring(0,4).equals("2013"))
+          //if ((row \ "@CreationDate").toString().length > 0 &&
+          //  !(row \ "@CreationDate").toString().substring(0,4).equals("2013"))
+          if ((row \ "@CreationDate").toString().length > 0)
           {
 
             var question_id = (row \ "@ParentId").toString()

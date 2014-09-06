@@ -17,7 +17,7 @@ object Fifth_Optimization {
     val hsUsers = new HashSet[String]
 
     println("Starting to read existing users...")
-    val users = scala.io.Source.fromFile("D:\\vvv.txt");
+    val users = scala.io.Source.fromFile("E:\\vvv.txt");
     for (user <- users.getLines()) {
       hsUsers += user
     }
@@ -74,7 +74,7 @@ object Fifth_Optimization {
     solrCounter = solrCounter + 1
     if (solrCounter % 10 == 0)
     {
-      (new Feed2Solr).send(lst);
+      (new InsertAnswererToSolr).send(lst);
       lst.clear()
     }
 

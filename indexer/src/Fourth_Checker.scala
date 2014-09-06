@@ -7,7 +7,7 @@ object Fourth_Checker {
     val chunkSize = 128 * 1024
     // Iterate over all posts which are answers and map their parents (the questions) to the user who answered them.
     val iterator = Source.fromFile("D:\\res.txt")("UTF-8").getLines.grouped(chunkSize)
-    var out_stream = new java.io.PrintStream("D:\\checker.txt", "UTF-8")
+    var out_stream = new java.io.PrintStream("E:\\checker.txt", "UTF-8")
     System.setOut(out_stream)
     var n = 0;
     var res = 0;
