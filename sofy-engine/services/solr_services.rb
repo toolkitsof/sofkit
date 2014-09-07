@@ -77,7 +77,30 @@ module SofyEngine
       @solr_stackoverflow_indexed.add :Id => question.question_id, :ParentId=> "", :PostTypeId=> "2", :AcceptedAnswerId => accepted_answer_id, :CreationDate=> DateTime.parse(question.creation_date).to_time.utc.iso8601, :Score=> question.score, :Body=> question.body, :OwnerUserId=> question.owner[:user_id], :LastActivityDate=> DateTime.parse(question.last_activity_date).to_time.utc.iso8601, :Title=> question.title, :Tags => question_tags, :AnswerCount=> question.answer_count
       @solr_stackoverflow_indexed.commit
     end
-    
+
+    # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
+    def get_body_mlt_for_question question
+
+    end
+
+    def get_body_mlt_for_answerer answerer
+      request_params = @body_query_params
+      request_params[:q] = "AnswererId:#{answerer}"
+      solr_response = @solr_answerer_connection.get 'tvrh', :params => request_params
+
+      body_q = ""
+      b = solr_response['termVectors'][3][3]
+      for i in 0..b.length
+        if i%2 == 1
+            if b[i][1] > 5 and b[i][1] < 30 and b[i][3] < 5000 and b[i][3] > 1400
+              body_q = body_q + "Body:" + b[i-1] + "^400 "
+            end
+        end
+      end
+
+      body_q
+    end
+
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
     def get_query_by_mlt question
       puts "INFO: get_similar_questions_from_solr"
@@ -92,7 +115,9 @@ module SofyEngine
       request_params['mlt.qf'.to_sym] = "Title^#{title_boost} Tags^#{tags_boost} Body^#{body_boost}"
       
       solr_response = @solr_stackoverflow_indexed.get 'mlt', :params => request_params
-      
+
+      #TODO: merge here results from custom mlt
+
       parsed_query = solr_response['debug']['parsedquery']
     end
 
@@ -106,8 +131,11 @@ module SofyEngine
 
       solr_response = @solr_answerer_connection.get 'mlt', :params => request_params
 
+      #TODO: merge here results from custom mlt
       parsed_query = solr_response['debug']['parsedquery']
 
+      body_query = get_body_mlt_for_answerer answerer
+      parsed_query = body_query + parsed_query
       request_params = @question_similarity_query
       request_params[:q] = parsed_query
 

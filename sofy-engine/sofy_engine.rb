@@ -12,6 +12,8 @@ module SofyEngine
     @similatiry_query = @config['similarity_query_params']
     @question_similarity_query = @config['question_similarity_params']
 
+    @body_query_params = @config['body_query_params']
+
     # Connect to Solr
     #url = "http://130.211.93.220:8983/solr/"
     url = "http://localhost:8983/solr/"

@@ -1,7 +1,6 @@
 require 'sinatra'
 require 'ruby-stackoverflow'
 require 'rsolr'
-require 'debugger'
 
 require './models/settings.rb'
 require './../sofy-engine/sofy_engine.rb'
@@ -64,8 +63,8 @@ def return_questions_ids_from_server user_id
 end
 
 
-initialize_server
+#initialize_server
 
 #return_answerers_ids_from_server 1961020
 
-#return_questions_ids_from_server someUserId
+return_questions_ids_from_server 485911

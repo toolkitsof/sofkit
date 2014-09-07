@@ -21,6 +21,12 @@ configs:
       lowercaseOperators: true
       rows: 8
       start: 0
+    body_query_params:
+      fl: none
+      tv.fl: Body
+      tv.tf_idf: true
+      tv.df: true
+      tv.tf: true
     question_similarity_params:
       fl: Id
       rows: 8
