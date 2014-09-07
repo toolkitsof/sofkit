@@ -80,6 +80,12 @@ module SofyEngine
 
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
     def get_body_mlt_for_question question
+      mintf = @body_query_params_question['mintf']
+      maxtf = @body_query_params_question['maxtf']
+      mindf = @body_query_params_question['mindf']
+      maxdf = @body_query_params_question['maxdf']
+      bodyboost = @body_query_params_question['bodyboost']
+
       request_params = @body_query_params
       request_params[:q] = "Id:#{question.question_id}"
       solr_response = @solr_stackoverflow_indexed.get 'tvrh', :params => request_params
@@ -88,8 +94,8 @@ module SofyEngine
       b = solr_response['termVectors'][3][3]
       for i in 0..b.length
         if i%2 == 1
-          if b[i][1] >= 1 and b[i][1] < 10 and b[i][3] < 200000 and b[i][3] > 1000
-            body_q = body_q + "Body:" + b[i-1] + "^50 "
+          if b[i][1] >= mintf and b[i][1] <= maxtf and b[i][3] >= mindf and b[i][3] <= maxdf
+            body_q = body_q + "Body:" + b[i-1] + "^#{bodyboost} "
           end
         end
       end
@@ -98,6 +104,12 @@ module SofyEngine
     end
 
     def get_body_mlt_for_answerer answerer
+      mintf = @body_query_params_answerer['mintf']
+      maxtf = @body_query_params_answerer['maxtf']
+      mindf = @body_query_params_answerer['mindf']
+      maxdf = @body_query_params_answerer['maxdf']
+      bodyboost = @body_query_params_answerer['bodyboost']
+
       request_params = @body_query_params
       request_params[:q] = "AnswererId:#{answerer}"
       solr_response = @solr_answerer_connection.get 'tvrh', :params => request_params
@@ -106,8 +118,8 @@ module SofyEngine
       b = solr_response['termVectors'][3][3]
       for i in 0..b.length
         if i%2 == 1
-            if b[i][1] > 5 and b[i][1] < 30 and b[i][3] < 5000 and b[i][3] > 1400
-              body_q = body_q + "Body:" + b[i-1] + "^400 "
+            if b[i][1] >= mintf and b[i][1] <= maxtf and b[i][3] >= mindf and b[i][3] <= maxdf
+              body_q = body_q + "Body:" + b[i-1] + "^#{bodyboost} "
             end
         end
       end
@@ -151,6 +163,7 @@ module SofyEngine
 
       body_query = get_body_mlt_for_answerer answerer
       parsed_query = body_query + parsed_query
+      
       request_params = @question_similarity_query
       request_params[:q] = parsed_query
 

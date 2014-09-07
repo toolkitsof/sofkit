@@ -12,7 +12,7 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/sofkit@server.coverage" NAME="server Coverage Results" MODIFIED="1410090028438" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sofy-server" MODULE_NAME="sofkit" />
+    <SUITE FILE_PATH="coverage/sofkit@server.coverage" NAME="server Coverage Results" MODIFIED="1410094692016" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sofy-server" MODULE_NAME="sofkit" />
     <SUITE FILE_PATH="coverage/sofkit@start.coverage" NAME="start Coverage Results" MODIFIED="1410088132439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/nelder-mead-optimization" MODULE_NAME="sofkit" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -70,8 +70,8 @@
       <file leaf-file-name="server.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sofy-server/server.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="888" max-vertical-offset="1292">
-              <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="767" max-vertical-offset="1292">
+              <caret line="56" column="27" selection-start-line="56" selection-start-column="27" selection-end-line="56" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -80,8 +80,8 @@
       <file leaf-file-name="sofy_engine.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sofy-engine/sofy_engine.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="614" max-vertical-offset="1054">
-              <caret line="29" column="6" selection-start-line="29" selection-start-column="6" selection-end-line="29" selection-end-column="6" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="4" max-vertical-offset="1105">
+              <caret line="22" column="31" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -90,8 +90,8 @@
       <file leaf-file-name="config.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sofy-server/config.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="646">
-              <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="341" max-vertical-offset="850">
+              <caret line="23" column="21" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -100,18 +100,8 @@
       <file leaf-file-name="solr_services.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sofy-engine/services/solr_services.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.16112532" vertical-offset="1399" max-vertical-offset="4777">
-              <caret line="86" column="17" selection-start-line="86" selection-start-column="17" selection-end-line="86" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="start.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nelder-mead-optimization/start.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1071" max-vertical-offset="1853">
-              <caret line="60" column="11" selection-start-line="60" selection-start-column="11" selection-end-line="60" selection-end-column="11" />
+            <state vertical-scroll-proportion="0.63682866" vertical-offset="2556" max-vertical-offset="4998">
+              <caret line="165" column="6" selection-start-line="165" selection-start-column="6" selection-end-line="165" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -139,10 +129,10 @@
       <list>
         <option value="C:/Ruby200-x64/lib/ruby/gems/2.0.0/gems/sinatra-sinatra-0.10.1/lib/sinatra/main.rb" />
         <option value="$PROJECT_DIR$/sofy-engine/services/stackoverflow_services.rb" />
-        <option value="$PROJECT_DIR$/sofy-server/config.rb" />
         <option value="$PROJECT_DIR$/sofy-engine/sofy_engine.rb" />
-        <option value="$PROJECT_DIR$/sofy-engine/services/solr_services.rb" />
+        <option value="$PROJECT_DIR$/sofy-server/config.rb" />
         <option value="$PROJECT_DIR$/sofy-server/server.rb" />
+        <option value="$PROJECT_DIR$/sofy-engine/services/solr_services.rb" />
       </list>
     </option>
   </component>
@@ -383,7 +373,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.49697885" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34743202" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34743202" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -420,19 +410,19 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="ruby-line">
           <url>file://$PROJECT_DIR$/sofy-engine/services/solr_services.rb</url>
-          <line>153</line>
-          <option name="timeStamp" value="12" />
+          <line>106</line>
+          <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="ruby-line">
           <url>file://$PROJECT_DIR$/sofy-engine/services/solr_services.rb</url>
-          <line>82</line>
-          <option name="timeStamp" value="13" />
+          <line>89</line>
+          <option name="timeStamp" value="15" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="14" />
+      <option name="time" value="16" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -576,22 +566,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sofy-server/config.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="646">
-          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nelder-mead-optimization/start.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="816" max-vertical-offset="1853">
-          <caret line="60" column="11" selection-start-line="60" selection-start-column="11" selection-end-line="60" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nelder-mead-optimization/config.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.6568182" vertical-offset="374" max-vertical-offset="1666">
@@ -600,26 +574,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/nelder-mead-optimization/start.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.12623763" vertical-offset="1071" max-vertical-offset="1853">
+          <caret line="60" column="11" selection-start-line="60" selection-start-column="11" selection-end-line="60" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sofy-server/config.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="341" max-vertical-offset="850">
+          <caret line="23" column="21" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/sofy-engine/sofy_engine.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="614" max-vertical-offset="1054">
-          <caret line="29" column="6" selection-start-line="29" selection-start-column="6" selection-end-line="29" selection-end-column="6" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="4" max-vertical-offset="1105">
+          <caret line="22" column="31" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="31" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sofy-server/server.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="888" max-vertical-offset="1292">
-          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="767" max-vertical-offset="1292">
+          <caret line="56" column="27" selection-start-line="56" selection-start-column="27" selection-end-line="56" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sofy-engine/services/solr_services.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.16112532" vertical-offset="1399" max-vertical-offset="4777">
-          <caret line="86" column="17" selection-start-line="86" selection-start-column="17" selection-end-line="86" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.63682866" vertical-offset="2556" max-vertical-offset="4998">
+          <caret line="165" column="6" selection-start-line="165" selection-start-column="6" selection-end-line="165" selection-end-column="6" />
           <folding />
         </state>
       </provider>

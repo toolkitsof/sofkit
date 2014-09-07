@@ -27,6 +27,18 @@ configs:
       tv.tf_idf: true
       tv.df: true
       tv.tf: true
+    body_query_params_question:
+      mintf: 1
+      maxtf: 10
+      mindf: 1000
+      maxdf: 200000
+      bodyboost: 50
+    body_query_params_answerer:
+      mintf: 5
+      maxtf: 30
+      mindf: 1400
+      maxdf: 5000
+      bodyboost: 400
     question_similarity_params:
       fl: Id
       rows: 8

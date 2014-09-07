@@ -14,6 +14,9 @@ module SofyEngine
 
     @body_query_params = @config['body_query_params']
 
+    @body_query_params_answerer = @config['body_query_params_answerer']
+    @body_query_params_question = @config['body_query_params_question']
+
     # Connect to Solr
     #url = "http://130.211.93.220:8983/solr/"
     url = "http://localhost:8983/solr/"

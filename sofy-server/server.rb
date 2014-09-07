@@ -66,6 +66,6 @@ end
 
 #initialize_server
 
-return_answerers_ids_from_server 4550770
+#return_answerers_ids_from_server 4550770
 
-#return_questions_ids_from_server 485911
+return_questions_ids_from_server 485911
