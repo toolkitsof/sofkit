@@ -11,11 +11,11 @@ module SofyEngine
         :q => "LastActivityDate:[2013-01-01T00:00:00.00Z TO NOW] AND NOT AcceptedAnswerId:\"\"",
         :fl => 'Id, AcceptedAnswerId, CreationDate',
         #:defType => 'edismax',
-        :sort => "random" + [*100..999].sample.to_s + " desc",
-        #:sort => "random" + "3a4631" + " desc",
+        #:sort => "random" + [*100..999].sample.to_s + " desc",
+        :sort => "random" + "3a4631" + " desc",
         #:fq => "NOT AnswerCount:0 AND NOT AnswerCount:1 AND NOT AnswerCount:2",
         #:fq => "AnswerCount:[2 TO *]",
-        :rows => 5
+        :rows => @config['query_parameters']['initial_questions_count']
       }
 
       solr_response = @solr_stackoverflow_indexed.get 'select', :params => request_params
@@ -74,21 +74,79 @@ module SofyEngine
       question_tags = '<' + question_tags + '>'
       
       # Index to solr
-      @solr_stackoverflow_indexed.add :Id => question.question_id, :ParentId=> "", :PostTypeId=> "2", :AcceptedAnswerId => accepted_answer_id, :CreationDate=> DateTime.parse(question.creation_date).to_time.utc.iso8601, :Score=> question.score, :Body=> question.body, :OwnerUserId=> question.owner[:user_id], :LastActivityDate=> DateTime.parse(question.last_activity_date).to_time.utc.iso8601, :Title=> question.title, :Tags => question_tags, :AnswerCount=> question.answer_count
+      @solr_stackoverflow_indexed.add :Id => question.question_id, :ParentId=> "".to_s, :PostTypeId=> "2", :AcceptedAnswerId => accepted_answer_id, :CreationDate=> DateTime.parse(question.creation_date).to_time.utc.iso8601, :Score=> question.score, :Body=> question.body, :OwnerUserId=> question.owner[:user_id], :LastActivityDate=> DateTime.parse(question.last_activity_date).to_time.utc.iso8601, :Title=> question.title, :Tags => question_tags, :AnswerCount=> question.answer_count
       @solr_stackoverflow_indexed.commit
     end
-    
+
+    # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
+    def get_body_mlt_for_question question
+      mintf = @body_query_params_question['mintf']
+      maxtf = @body_query_params_question['maxtf']
+      mindf = @body_query_params_question['mindf']
+      maxdf = @body_query_params_question['maxdf']
+      bodyboost = @body_query_params_question['bodyboost']
+
+      request_params = @body_query_params
+      request_params[:q] = "Id:#{question.question_id}"
+      solr_response = @solr_stackoverflow_indexed.get 'tvrh', :params => request_params
+
+      body_q = ""
+      b = solr_response['termVectors'][3][3]
+      for i in 0..b.length
+        if i%2 == 1
+          if b[i][1] >= mintf and b[i][1] <= maxtf and b[i][3] >= mindf and b[i][3] <= maxdf
+            body_q = body_q + "Body:" + b[i-1] + "^#{bodyboost} "
+          end
+        end
+      end
+
+      body_q
+    end
+
+    def get_body_mlt_for_answerer answerer
+      mintf = @body_query_params_answerer['mintf']
+      maxtf = @body_query_params_answerer['maxtf']
+      mindf = @body_query_params_answerer['mindf']
+      maxdf = @body_query_params_answerer['maxdf']
+      bodyboost = @body_query_params_answerer['bodyboost']
+
+      request_params = @body_query_params
+      request_params[:q] = "AnswererId:#{answerer}"
+      solr_response = @solr_answerer_connection.get 'tvrh', :params => request_params
+
+      body_q = ""
+      b = solr_response['termVectors'][3][3]
+      for i in 0..b.length
+        if i%2 == 1
+            if b[i][1] >= mintf and b[i][1] <= maxtf and b[i][3] >= mindf and b[i][3] <= maxdf
+              body_q = body_q + "Body:" + b[i-1] + "^#{bodyboost} "
+            end
+        end
+      end
+
+      body_q
+    end
+
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
     def get_query_by_mlt question
       puts "INFO: get_similar_questions_from_solr"
-
+      
       request_params = @mlt_request
 
       request_params[:q] = "Id:#{question.question_id}"
 
+      title_boost = @mlt_request['titleBoost']
+      tags_boost = @mlt_request['tagsBoost']
+      body_boost = @mlt_request['bodyBoost']
+      request_params['mlt.qf'.to_sym] = "Title^#{title_boost} Tags^#{tags_boost} Body^#{body_boost}"
+      
       solr_response = @solr_stackoverflow_indexed.get 'mlt', :params => request_params
 
-      parsed_query = solr_response['debug']['parsedquery']
+      #TODO: merge here results from custom mlt
+
+      body_question_query = get_body_mlt_for_question question
+      puts body_question_query
+      parsed_query = body_question_query + solr_response['debug']['parsedquery']
     end
 
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
@@ -103,6 +161,9 @@ module SofyEngine
 
       parsed_query = solr_response['debug']['parsedquery']
 
+      body_query = get_body_mlt_for_answerer answerer
+      parsed_query = body_query + parsed_query
+      
       request_params = @question_similarity_query
       request_params[:q] = parsed_query
 
@@ -202,18 +263,24 @@ module SofyEngine
     # Returns a document by id
     def filter_answerer_exists owners, questionID
       query = ""
-      owners.map{ |x| query += " OR " + x.to_s }
-      query=query.sub("OR ", "")
-      query = "AnswererId:(#{query}) AND AnsweredQuestionIds:#{questionID}"
+      owners.map{ |x| if (x.to_s.length > 0 )
+                        query += " OR " + x.to_s
+                      end
+      }
+      query=query.sub(" OR ", "")
+      query = "AnswererId:(#{query}) AND NOT AnsweredQuestionIds:#{questionID}"
       puts query
       request_params = {
           :q => "#{query}",
           :fl => 'AnswererId'
       }
 
-      solr_response = @solr_answerer_connection.get 'select', :params => request_params
+      if (query.length > 0)
+        solr_response = @solr_answerer_connection.get 'select', :params => request_params
+        res = solr_response['response']['docs'].map { |doc| doc['AnswererId'] }
+      end
 
-      res = solr_response['response']['docs'].map { |doc| doc['AnswererId'] }
+
       return res
     end
 

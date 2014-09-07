@@ -12,10 +12,15 @@ module SofyEngine
     @similatiry_query = @config['similarity_query_params']
     @question_similarity_query = @config['question_similarity_params']
 
+    @body_query_params = @config['body_query_params']
+
+    @body_query_params_answerer = @config['body_query_params_answerer']
+    @body_query_params_question = @config['body_query_params_question']
+
     # Connect to Solr
-    #url = "http://146.148.24.118:8983/solr/"
-    url = "http://130.211.93.220:8983/solr/"
-    @solr_stackoverflow_indexed = RSolr.connect :url => url + 'collection1'
+    #url = "http://130.211.93.220:8983/solr/"
+    url = "http://localhost:8983/solr/"
+	  @solr_stackoverflow_indexed = RSolr.connect :url => url + 'collection1'
     @solr_answerer_connection = RSolr.connect :url => url + 'collection2'
     
   end
