@@ -17,7 +17,7 @@ module SofyEngine
     # Connect to Solr
     #url = "http://130.211.93.220:8983/solr/"
     url = "http://localhost:8983/solr/"
-	@solr_stackoverflow_indexed = RSolr.connect :url => url + 'collection1'
+	  @solr_stackoverflow_indexed = RSolr.connect :url => url + 'collection1'
     @solr_answerer_connection = RSolr.connect :url => url + 'collection2'
     
   end

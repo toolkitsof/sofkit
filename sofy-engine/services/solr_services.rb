@@ -74,13 +74,27 @@ module SofyEngine
       question_tags = '<' + question_tags + '>'
       
       # Index to solr
-      @solr_stackoverflow_indexed.add :Id => question.question_id, :ParentId=> "", :PostTypeId=> "2", :AcceptedAnswerId => accepted_answer_id, :CreationDate=> DateTime.parse(question.creation_date).to_time.utc.iso8601, :Score=> question.score, :Body=> question.body, :OwnerUserId=> question.owner[:user_id], :LastActivityDate=> DateTime.parse(question.last_activity_date).to_time.utc.iso8601, :Title=> question.title, :Tags => question_tags, :AnswerCount=> question.answer_count
+      @solr_stackoverflow_indexed.add :Id => question.question_id, :ParentId=> "".to_s, :PostTypeId=> "2", :AcceptedAnswerId => accepted_answer_id, :CreationDate=> DateTime.parse(question.creation_date).to_time.utc.iso8601, :Score=> question.score, :Body=> question.body, :OwnerUserId=> question.owner[:user_id], :LastActivityDate=> DateTime.parse(question.last_activity_date).to_time.utc.iso8601, :Title=> question.title, :Tags => question_tags, :AnswerCount=> question.answer_count
       @solr_stackoverflow_indexed.commit
     end
 
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
     def get_body_mlt_for_question question
+      request_params = @body_query_params
+      request_params[:q] = "Id:#{question.question_id}"
+      solr_response = @solr_stackoverflow_indexed.get 'tvrh', :params => request_params
 
+      body_q = ""
+      b = solr_response['termVectors'][3][3]
+      for i in 0..b.length
+        if i%2 == 1
+          if b[i][1] >= 1 and b[i][1] < 10 and b[i][3] < 200000 and b[i][3] > 1000
+            body_q = body_q + "Body:" + b[i-1] + "^50 "
+          end
+        end
+      end
+
+      body_q
     end
 
     def get_body_mlt_for_answerer answerer
@@ -118,7 +132,9 @@ module SofyEngine
 
       #TODO: merge here results from custom mlt
 
-      parsed_query = solr_response['debug']['parsedquery']
+      body_question_query = get_body_mlt_for_question question
+      puts body_question_query
+      parsed_query = body_question_query + solr_response['debug']['parsedquery']
     end
 
     # Query with mlt on question to get parsedquery (parses the important words of the question to query with grades)
@@ -131,7 +147,6 @@ module SofyEngine
 
       solr_response = @solr_answerer_connection.get 'mlt', :params => request_params
 
-      #TODO: merge here results from custom mlt
       parsed_query = solr_response['debug']['parsedquery']
 
       body_query = get_body_mlt_for_answerer answerer
