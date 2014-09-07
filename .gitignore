@@ -1,14 +1,18 @@
-indexer/.idea/workspace.xml
-indexer/.idea/workspace.xml
-optimization/.idea/.name
 indexer/*/*.xml
 optimization/*/*.xml
-*.iml
-indexer/.idea/workspace.xml
-indexer/.idea/workspace.xml
+
+# Remove running status file
+nelder-mead-optimization/*.txt
 
 # Remove Intellij directories
 optimization/.idea
 indexer/.idea
 .idea/workspace.xml
-.idea/workspace.xml
+*.iml
+indexer/.idea/workspace.xml
+indexer/.idea/workspace.xml
+indexer/.idea/workspace.xml
+indexer/.idea/workspace.xml
+optimization/.idea/.name
+*.class
+*.class

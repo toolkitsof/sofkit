@@ -11,7 +11,7 @@ case class SolrId(Id:String,PostTypeId:String,ParentId:String, AcceptedAnswerId:
 class Feed2Solr
 {
   // The SOLR URL we would like to index to.
-  val url = "http://localhost:8983/solr/"
+  val url = "http://localhost:8983/solr/collection1"
   val solrDocuments = new ArrayList[SolrInputDocument]()
   val server= new HttpSolrServer( url )
 

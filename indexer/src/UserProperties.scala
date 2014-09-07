@@ -10,10 +10,10 @@ import scala.collection.mutable.ArrayBuffer
 case class UserProperties (Id:String, NumAnswered:Integer , AnsweredQuestionIds:util.ArrayList[String], Score:String, QuestionBody:util.ArrayList[String],
                            QuestionTitle:util.ArrayList[String], QuestionTags:util.ArrayList[String], LastActivityDate:Date)
 
-class Feed2Solr
+class InsertAnswererToSolr
 {
   // The SOLR URL we would like to index to.
-  val url = "http://146.148.24.118:8983/solr/collection2"
+  val url = "http://localhost:8983/solr/collection2"
   val solrDocuments = new ArrayList[SolrInputDocument]()
   val server= new HttpSolrServer( url )
 

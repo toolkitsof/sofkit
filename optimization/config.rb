@@ -11,14 +11,14 @@ configs:
       mlt.mindf: 5
       mlt.mintf: 1
       mlt.boost: true
-      mlt.qf: Title^10 Tags^200
+      mlt.qf: Title Tags^20
       debugQuery: true
       rows: 0
     similarity_query_params:
       fl: AnswererId
-      defType: edismax
+      #defType: edismax
       stopwords: true
-      lowercaseOperators: true
+      lowercaseOperators: false
       rows: 50
       start: 0
     question_similarity_params:

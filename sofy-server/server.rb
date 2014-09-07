@@ -1,7 +1,6 @@
 require 'sinatra'
 require 'ruby-stackoverflow'
 require 'rsolr'
-require 'debugger'
 
 require './models/settings.rb'
 require './../sofy-engine/sofy_engine.rb'
@@ -46,7 +45,8 @@ def return_answerers_ids_from_server question_id
 
   # Get answerers
   response = get_question_from_stack_overflow question_id
-  (answerers_suggested_ids, query) = return_answerers_ids response['question']
+  question_id = response['question']
+  (answerers_suggested_ids, query) = return_answerers_ids question_id, false
   
   return answerers_suggested_ids
 end
@@ -64,8 +64,8 @@ def return_questions_ids_from_server user_id
 end
 
 
-initialize_server
+#initialize_server
 
-#return_answerers_ids_from_server 1961020
+#return_answerers_ids_from_server 4550770
 
-#return_questions_ids_from_server someUserId
+return_questions_ids_from_server 485911
