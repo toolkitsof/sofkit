@@ -25,7 +25,7 @@ Sofy = (function() {
       $questionAnswers.prepend($container);
     }
     // Results page
-    else {
+    else if (url.indexOf('unanswered') !== -1) {
     
       var $questionsSummaries = $(consts.questionSummaryClassSelector),
           counter = 0;
@@ -44,11 +44,38 @@ Sofy = (function() {
         counter++;
       });
     }
+    // Main page
+    else {
+      createSuggestedQuestions();
+    }
   }
    
   function createSuggestedQuestions() {
     var href = $("body > .topbar a.profile-me").attr("href");
-    //callSofyQuestionsEngine()
+    var userId = href.split('/')[2];
+    callSofyQuestionsEngine(userId, function (questions) {
+      var $title = $('<div>').attr('class', 'bulletin-title').html('Questions for you');
+      var $sideBar = $('#sidebar .related');
+      $question = buildQuestion(questions[0]);
+      $sideBar.prepend($question);
+      $sideBar.prepend($('<hr>')).prepend($title);
+    });
+  }
+  
+  function buildQuestion(question) {
+    var $spacer = $('<div>').attr('class', 'spacer');
+    var $itemType = $('<div>').attr('class', 'bulletin-item-type');
+    var $score = $('<span>').attr('title', 'Vote score (upvotes - downvotes)').html('3');
+    $itemType.append($score);
+    var $itemContent = $('<div>').attr('class', 'bulletin-item-content');
+    var url = 'http://stackoverflow.com/questions/' + question.Id;
+    var $link = $('<a>').attr('class', 'question-hyperlink').attr('href', url).html(question.Title);
+    $itemContent.append($link);
+    var $cbt = $('<br>').attr('class', 'cbt');
+    
+    $spacer.append($itemType).append($itemContent).append($cbt);
+    
+    return $spacer;
   }
   
   function initGoogleAnalytics() {
@@ -157,8 +184,8 @@ Sofy = (function() {
   }
   
   function callSofyAnswerersEngine(questionId, callback) {
-    //var url = 'http://localhost:4567/return_answerers_ids_from_server?id=' + questionId;
-    var url = 'http://sof-sofy.herokuapp.com/return_answerers_ids_from_server?id=' + questionId;
+    var url = 'http://localhost:4567/return_answerers_ids_from_server?id=' + questionId;
+    //var url = 'http://sof-sofy.herokuapp.com/return_answerers_ids_from_server?id=' + questionId;
     $.ajax(url)
       .success(function(results) {
         var answerersIds = JSON.parse(results);
@@ -167,7 +194,8 @@ Sofy = (function() {
       ;
   }
   function callSofyQuestionsEngine(userId, callback) {
-    var url = 'http://sof-sofy.herokuapp.com/return_questions_ids_from_server?id=' + userId;
+    var url = 'http://localhost:4567/return_questions_ids_from_server?id=' + userId;
+    //var url = 'http://sof-sofy.herokuapp.com/return_questions_ids_from_server?id=' + userId;
     $.ajax(url)
       .success(function(results) {
         var questions = JSON.parse(results);
