@@ -184,8 +184,8 @@ Sofy = (function() {
   }
   
   function callSofyAnswerersEngine(questionId, callback) {
-    var url = 'http://localhost:4567/return_answerers_ids_from_server?id=' + questionId;
-    //var url = 'http://sof-sofy.herokuapp.com/return_answerers_ids_from_server?id=' + questionId;
+    //var url = 'http://localhost:4567/return_answerers_ids_from_server?id=' + questionId;
+    var url = 'http://sof-sofy.herokuapp.com/return_answerers_ids_from_server?id=' + questionId;
     $.ajax(url)
       .success(function(results) {
         var answerersIds = JSON.parse(results);
@@ -194,8 +194,8 @@ Sofy = (function() {
       ;
   }
   function callSofyQuestionsEngine(userId, callback) {
-    var url = 'http://localhost:4567/return_questions_ids_from_server?id=' + userId;
-    //var url = 'http://sof-sofy.herokuapp.com/return_questions_ids_from_server?id=' + userId;
+    //var url = 'http://localhost:4567/return_questions_ids_from_server?id=' + userId;
+    var url = 'http://sof-sofy.herokuapp.com/return_questions_ids_from_server?id=' + userId;
     $.ajax(url)
       .success(function(results) {
         var questions = JSON.parse(results);
