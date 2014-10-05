@@ -13,7 +13,7 @@ case class UserProperties (Id:String, NumAnswered:Integer , AnsweredQuestionIds:
 class InsertAnswererToSolr
 {
   // The SOLR URL we would like to index to.
-  val url = "http://localhost:8983/solr/collection2"
+  val url = "http://130.211.93.220:8983/solr/collection2"
   val solrDocuments = new ArrayList[SolrInputDocument]()
   val server= new HttpSolrServer( url )
 
