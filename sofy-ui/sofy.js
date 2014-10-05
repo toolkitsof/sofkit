@@ -8,6 +8,8 @@ Sofy = (function() {
   };
 
   function init() {
+    initGoogleAnalytics();
+  
     var url = window.location.href;
     
     // Question page
@@ -23,10 +25,10 @@ Sofy = (function() {
       $questionAnswers.prepend($container);
     }
     // Results page
-    else {
+    else if (url.indexOf('unanswered') !== -1) {
+    
       var $questionsSummaries = $(consts.questionSummaryClassSelector),
           counter = 0;
-      
     
       $questionsSummaries.each(function() {
         // Stackoverflow blocks us if we do too many requests
@@ -42,6 +44,47 @@ Sofy = (function() {
         counter++;
       });
     }
+    // Main page
+    else {
+      createSuggestedQuestions();
+    }
+  }
+   
+  function createSuggestedQuestions() {
+    var href = $("body > .topbar a.profile-me").attr("href");
+    var userId = href.split('/')[2];
+    callSofyQuestionsEngine(userId, function (questions) {
+      var $title = $('<div>').attr('class', 'bulletin-title').html('Questions for you');
+      var $sideBar = $('#sidebar .related');
+      $question = buildQuestion(questions[0]);
+      $sideBar.prepend($question);
+      $sideBar.prepend($('<hr>')).prepend($title);
+    });
+  }
+  
+  function buildQuestion(question) {
+    var $spacer = $('<div>').attr('class', 'spacer');
+    var $itemType = $('<div>').attr('class', 'bulletin-item-type');
+    var $score = $('<span>').attr('title', 'Vote score (upvotes - downvotes)').html('3');
+    $itemType.append($score);
+    var $itemContent = $('<div>').attr('class', 'bulletin-item-content');
+    var url = 'http://stackoverflow.com/questions/' + question.Id;
+    var $link = $('<a>').attr('class', 'question-hyperlink').attr('href', url).html(question.Title);
+    $itemContent.append($link);
+    var $cbt = $('<br>').attr('class', 'cbt');
+    
+    $spacer.append($itemType).append($itemContent).append($cbt);
+    
+    return $spacer;
+  }
+  
+  function initGoogleAnalytics() {
+    // You'll usually only ever have to create one service instance.
+    var service = analytics.getService('ice_cream_app');
+
+    // You can create as many trackers as you want. Each tracker has its own state
+    // independent of other tracker instances.
+    var tracker = service.getTracker('UA-XXXXX-X');  // Supply your GA Tracking ID.
   }
 
   // Creates a html element (a container) to put inside the suggested answerers
@@ -77,7 +120,7 @@ Sofy = (function() {
   function perQuestion(questionId, questionSummary, $container) {
     // Call sofy engine
     //var answerersIds = [190744, 47481, 2715725, 2052523];
-    callSofyEngine(questionId, function(answerersIds) {
+    callSofyAnswerersEngine(questionId, function(answerersIds) {
     
       var counter = 0;
       var answerersGravatars = [];
@@ -128,9 +171,9 @@ Sofy = (function() {
   
   // Creates the more button
   function createMoreButton() {
-    $moreButton = $('<div>');
-    $moreLink = $('<a>');
-    $moreHeader = $('<h3>');
+    var $moreButton = $('<div>'),
+        $moreLink = $('<a>'),
+        $moreHeader = $('<h3>');
     $moreHeader.css('font-size', '200%').css('margin-top', '15%');
     $moreHeader.html('More...');
     
@@ -140,12 +183,23 @@ Sofy = (function() {
     return $moreButton;
   }
   
-  function callSofyEngine(questionId, callback) {
-    var url = 'http://localhost:4567/return_answerers_ids_from_server?id=' + questionId;
+  function callSofyAnswerersEngine(questionId, callback) {
+    //var url = 'http://localhost:4567/return_answerers_ids_from_server?id=' + questionId;
+    var url = 'http://sof-sofy.herokuapp.com/return_answerers_ids_from_server?id=' + questionId;
     $.ajax(url)
       .success(function(results) {
         var answerersIds = JSON.parse(results);
         callback(answerersIds);
+      })
+      ;
+  }
+  function callSofyQuestionsEngine(userId, callback) {
+    //var url = 'http://localhost:4567/return_questions_ids_from_server?id=' + userId;
+    var url = 'http://sof-sofy.herokuapp.com/return_questions_ids_from_server?id=' + userId;
+    $.ajax(url)
+      .success(function(results) {
+        var questions = JSON.parse(results);
+        callback(questions);
       })
       ;
   }

@@ -46,7 +46,7 @@ def return_answerers_ids_from_server question_id
   # Get answerers
   response = get_question_from_stack_overflow question_id
   question_id = response['question']
-  (answerers_suggested_ids, query) = return_answerers_ids question_id, false
+  (answerers_suggested_ids, query) = return_answerers_ids question_id
   
   return answerers_suggested_ids
 end

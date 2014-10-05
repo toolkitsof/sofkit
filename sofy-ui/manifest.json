@@ -1,12 +1,21 @@
 {
   "manifest_version": 2,
-  "name": "Sofy",
-  "description": "Stackoverflow.com extension - possible answerers will be added to questions with no answers.",
-  "version": "1.0",
+  "name": "sofy",
+  "description": "Stackoverflow.com extension - possible answerers will be added to questions.",
+  "version": "1.2",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "permissions": [
+    "https://www.google-analytics.com/",
+    "storage"
+  ],
   "content_scripts": [
     {
-      "matches": ["http://stackoverflow.com/unanswered", "http://stackoverflow.com/questions/*/*", "https://stackoverflow.com/unanswered", "https://stackoverflow.com/questions/*/*"],
-      "js": ["jquery.js", "sofy.js"]
+      "matches": ["http://stackoverflow.com/", "http://stackoverflow.com/unanswered", "http://stackoverflow.com/questions/*/*", "https://stackoverflow.com/", "https://stackoverflow.com/unanswered", "https://stackoverflow.com/questions/*/*"],
+      "js": ["jquery.js", "google-analytics-bundle.js", "sofy.js"]
     }
   ]
 }

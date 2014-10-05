@@ -53,8 +53,8 @@ module SofyEngine
         return response['answerers'], query
       end
     rescue Exception => e
+      debugger
       puts "EXCEPTION! ex.: #{e}"
-      return e
     end
   end
 end
