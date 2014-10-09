@@ -1,0 +1,8 @@
+2014-10-09 15:44:46 +0300 Result for config {"mlt.mindf"=>3, "mlt.minwl"=>1, "mlt.maxqt"=>12, "titleBoost"=>5.25, "tagsBoost"=>16.9} AND {} AND {"mindf"=>730, "bodyboost"=>22.2} is: 372 / 471 
+2014-10-09 15:58:43 +0300 Result for config {"mlt.mindf"=>5, "mlt.minwl"=>0, "mlt.maxqt"=>25, "titleBoost"=>10, "tagsBoost"=>20} AND {} AND {"mindf"=>1400, "bodyboost"=>400} is: 379 / 471 
+2014-10-09 16:03:05 +0300 Result for config {"mlt.mindf"=>4, "mlt.minwl"=>3, "mlt.maxqt"=>30, "titleBoost"=>10, "tagsBoost"=>10} AND {} AND {"mindf"=>1200, "bodyboost"=>300} is: 386 / 471 
+2014-10-09 16:06:53 +0300 Result for config {"mlt.mindf"=>2, "mlt.minwl"=>4, "mlt.maxqt"=>10, "titleBoost"=>5, "tagsBoost"=>15} AND {} AND {"mindf"=>600, "bodyboost"=>150} is: 383 / 471 
+2014-10-09 16:17:08 +0300 Result for config {"mlt.mindf"=>3, "mlt.minwl"=>2, "mlt.maxqt"=>10, "titleBoost"=>20, "tagsBoost"=>10} AND {} AND {"mindf"=>1000, "bodyboost"=>100} is: 380 / 471 
+2014-10-09 16:20:39 +0300 Result for config {"mlt.mindf"=>2, "mlt.minwl"=>6, "mlt.maxqt"=>20, "titleBoost"=>15, "tagsBoost"=>5} AND {} AND {"mindf"=>1400, "bodyboost"=>100} is: 399 / 471 
+2014-10-09 16:24:49 +0300 Result for config {"mlt.mindf"=>2, "mlt.minwl"=>3, "mlt.maxqt"=>15, "titleBoost"=>10, "tagsBoost"=>10} AND {} AND {"mindf"=>600, "bodyboost"=>10} is: 380 / 471 
+2014-10-09 16:28:13 +0300 Result for config {"mlt.mindf"=>1, "mlt.minwl"=>5, "mlt.maxqt"=>25, "titleBoost"=>15, "tagsBoost"=>5} AND {} AND {"mindf"=>1000, "bodyboost"=>10} is: 397 / 471 
