@@ -34,6 +34,36 @@ module SofyEngine
       }
     end
 
+    # Returns random (with some constrains) answerers_ids from solr
+    def get_answerers_ids_from_solr
+      # Send a request to /select
+
+      request_params = {
+        :q => "LastActivityDate:[2013-01-01T00:00:00.00Z TO NOW] AND NOT AcceptedAnswerId:\"\"",
+        :fl => 'Id, AcceptedAnswerId, CreationDate',
+        #:defType => 'edismax',
+        #:sort => "random" + [*100..999].sample.to_s + " desc",
+        :sort => "random" + "7f4471" + " desc",
+        #:fq => "NOT AnswerCount:0 AND NOT AnswerCount:1 AND NOT AnswerCount:2",
+        #:fq => "AnswerCount:[2 TO *]",
+        :rows => @config['query_parameters']['initial_questions_count']
+      }
+
+      solr_response = @solr_stackoverflow_indexed.get 'select', :params => request_params
+    
+      # Format response as a RubyStackoverflow Question object
+      questions = solr_response['response']['docs'].map { |doc| RubyStackoverflow::Client::Question.new({
+          :'question_id' => doc['Id'].to_i,
+          :'created_date' => doc['CreationDate'].to_s,
+          :'accepted_answer_id' => doc['AcceptedAnswerId'].to_i
+        })
+      }
+    
+      return {
+        'success' => true,
+        'questions' => questions
+      }
+    end
 
     def get_question_from_solr question_id
       # Send a request to /select
@@ -137,8 +167,11 @@ module SofyEngine
 
       title_boost = @mlt_request['titleBoost']
       tags_boost = @mlt_request['tagsBoost']
-      body_boost = @mlt_request['bodyBoost']
-      request_params['mlt.qf'.to_sym] = "Title^#{title_boost} Tags^#{tags_boost} Body^#{body_boost}"
+      request_params['mlt.qf'.to_sym] = "Title^#{title_boost} Tags^#{tags_boost}"
+      
+      # Choose this when there is body in query
+      #body_boost = @mlt_request['bodyBoost']
+      #request_params['mlt.qf'.to_sym] = "Title^#{title_boost} Tags^#{tags_boost} Body^#{body_boost}"
       
       solr_response = @solr_stackoverflow_indexed.get 'mlt', :params => request_params
 
@@ -170,8 +203,27 @@ module SofyEngine
       suggested_questions = @solr_stackoverflow_indexed.get 'select', :params => request_params
     end
 
+    # Fixes the query (Removes special characther : when not needed)
+    def fix_query query
+      newQuery = ''
+      queryParts = query.split(' ')
+      newQueryParts = []
+      
+      queryParts.each do |queryPart|
+        if queryPart.count(':') > 1
+          queryPart.gsub!(/(.*)(:)(.*)/, '\1\\:\3')
+        end
+        
+        newQueryParts << queryPart
+      end
+      
+      # Rebuild the new query
+      newQuery = newQueryParts.join ' '
+    end
+    
     # Returns a list of answerers by query
     def get_answerers_by_question_similarity query
+      query = fix_query query
       
       request_params = {
           :q => query,

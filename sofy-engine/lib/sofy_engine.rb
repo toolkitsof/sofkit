@@ -26,8 +26,10 @@ module SofyEngine
   end
   
   # This is used for optimizations to play with configurations
-  def update_engine_config config
-    @mlt_request = @mlt_request.merge config
+  def update_engine_config mlt_config, body_query_answerer_config, body_query_question_config
+    @mlt_request = @mlt_request.merge mlt_config
+    @body_query_params_answerer = @body_query_params_answerer.merge body_query_answerer_config
+    @body_query_params_question = @body_query_params_question.merge body_query_question_config
   end
   
   def return_answerers_ids question, index_question=true
@@ -53,7 +55,6 @@ module SofyEngine
         return response['answerers'], query
       end
     rescue Exception => e
-      debugger
       puts "EXCEPTION! ex.: #{e}"
     end
   end
